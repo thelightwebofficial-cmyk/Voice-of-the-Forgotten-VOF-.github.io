@@ -7,6 +7,9 @@
     <meta name="description" content="An online reading room for Voice of the Forgotten (VOF) by Light." />
     <link rel="icon" href="favicon.ico" type="image/x-icon" />
 
+    <!-- Zoomment verification meta tag -->
+    <meta name="zoomment" content="6a72258e44ee0b484aa2e2c3" />
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -652,7 +655,7 @@
     <header class="site-header">
         <div class="brand">
             <span class="eyebrow">Now Reading</span>
-            <h1 id="bookTitle">The Book Title Goes Here</h1>
+            <h1 id="bookTitle">Voice of the Forgotten (VOF)</h1>
             <p id="bookAuthor">by Light Shadow Knight</p>
         </div>
 
@@ -716,22 +719,8 @@
     <section class="comments-section">
         <h2>Notes in the margin</h2>
         <p class="comments-sub">Leave a line, reply to someone else's, drop a GIF or a sticker — it's all fair game.</p>
-        <div id="giscus-container">
-            <!-- Giscus script with number mapping -->
-            <script src="https://giscus.app/client.js"
-                data-repo="thelightwebofficial-cmyk/Chat"
-                data-repo-id="R_kgDOTttNbA"
-                data-mapping="number"
-                data-term="1"
-                data-reactions-enabled="1"
-                data-emit-metadata="0"
-                data-input-position="bottom"
-                data-theme="preferred_color_scheme"
-                data-lang="en"
-                crossorigin="anonymous"
-                async>
-            </script>
-        </div>
+        <div id="zoomment" data-theme="light" data-language="en" data-gravatar="monsterid" data-emotions="❤️,😀,🪄,🥸,💡,🤔,💩,😢" data-visitors="true"></div>
+        <script src="https://cdn.zoomment.com/zoomment.min.js" async></script>
     </section>
 
     <!-- ============ FOOTER ============ -->
@@ -789,7 +778,7 @@
            CONFIG — fill these in before you publish.
            ========================================================= */
         const CONFIG = {
-            bookTitle: "The Book Title Goes Here",
+            bookTitle: "Voice of the Forgotten (VOF)",
             bookAuthor: "Light Shadow Knight",
             driveFileId: "1b6KmNMHXgLz1QhLyGX5Oo2QpUDJEcbyQ",
             counterNamespace: "thelightwebofficial-cmyk-chat-2026",
@@ -864,7 +853,6 @@
             setupProtection();
             setupDonateModal();
             setupLegalModals();
-            // Giscus is loaded statically, no extra setup needed.
         });
 
         /* ---------- Reader ---------- */
