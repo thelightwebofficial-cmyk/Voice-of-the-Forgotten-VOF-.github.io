@@ -1,0 +1,1052 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Reading Room · Voice of the Forgotten</title>
+    <meta name="description" content="An online reading room for Voice of the Forgotten (VOF) by Light." />
+    <link rel="icon" href="favicon.ico" type="image/x-icon" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <style>
+        /* =========================================================
+           READING ROOM — a late-night library, not a template.
+           Palette: ink navy + warm amber lamplight + slate chrome
+           ========================================================= */
+
+        :root {
+            --ink: #10121a;
+            --ink-2: #171a24;
+            --surface: #1c1f2c;
+            --surface-2: #232739;
+            --line: #2b2f40;
+            --paper: #ece6d6;
+            --paper-dim: #b9b2a0;
+            --amber: #e8a33d;
+            --amber-dim: #a9772f;
+            --slate: #7d8ca0;
+            --danger: #d9705f;
+            --serif: 'Fraunces', Georgia, serif;
+            --sans: 'Inter', system-ui, -apple-system, sans-serif;
+            --mono: 'JetBrains Mono', ui-monospace, monospace;
+            --radius: 14px;
+            --shadow-lamp: 0 0 120px 40px rgba(232, 163, 61, 0.09);
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.001ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.001ms !important;
+            }
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: radial-gradient(circle at 50% -10%, #1a1d2a 0%, var(--ink) 55%);
+            color: var(--paper);
+            font-family: var(--sans);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .grain {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0.05;
+            mix-blend-mode: overlay;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        }
+
+        /* ============ HEADER ============ */
+        .site-header {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            flex-wrap: wrap;
+            gap: 16px;
+            padding: 48px 6vw 28px;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .eyebrow {
+            display: block;
+            font-family: var(--mono);
+            font-size: 11px;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--amber);
+            margin-bottom: 10px;
+        }
+
+        .brand h1 {
+            font-family: var(--serif);
+            font-weight: 600;
+            font-style: italic;
+            font-size: clamp(28px, 4.5vw, 46px);
+            margin: 0;
+            color: var(--paper);
+        }
+
+        .brand p {
+            margin: 6px 0 0;
+            color: var(--paper-dim);
+            font-size: 15px;
+        }
+
+        .stats {
+            display: flex;
+            gap: 10px;
+        }
+
+        .stat-pill {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--surface);
+            border: 1px solid var(--line);
+            color: var(--paper);
+            font-family: var(--mono);
+            font-size: 14px;
+            padding: 9px 15px;
+            border-radius: 999px;
+            cursor: pointer;
+            transition: transform .15s ease, border-color .2s ease, background .2s ease;
+        }
+        .stat-pill.stat-static {
+            cursor: default;
+        }
+        .stat-pill .icon {
+            width: 16px;
+            height: 16px;
+            color: var(--slate);
+        }
+
+        #likeBtn:hover {
+            border-color: var(--amber-dim);
+            transform: translateY(-1px);
+        }
+        #likeBtn[aria-pressed="true"] {
+            background: linear-gradient(180deg, rgba(232, 163, 61, .18), rgba(232, 163, 61, .06));
+            border-color: var(--amber);
+        }
+        #likeBtn[aria-pressed="true"] .heart {
+            color: var(--amber);
+            fill: var(--amber);
+        }
+        #likeBtn.pulse {
+            animation: heartPulse .4s ease;
+        }
+        @keyframes heartPulse {
+            0% {
+                transform: scale(1);
+            }
+            40% {
+                transform: scale(1.18);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        /* ============ READER ============ */
+        .reader-shell {
+            position: relative;
+            z-index: 2;
+            padding: 56px 6vw 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .lamp-glow {
+            position: absolute;
+            top: -60px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 70vw;
+            height: 280px;
+            background: radial-gradient(ellipse at center, rgba(232, 163, 61, .13), transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .reader-frame {
+            position: relative;
+            width: min(900px, 100%);
+            aspect-ratio: 8.5 / 11;
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-lamp), 0 30px 60px -20px rgba(0, 0, 0, .6);
+            overflow: hidden;
+            animation: pageRise .7s cubic-bezier(.2, .8, .2, 1);
+        }
+        @keyframes pageRise {
+            from {
+                opacity: 0;
+                transform: translateY(18px) scale(.985);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .reader-frame iframe {
+            width: 100%;
+            height: 100%;
+            border: 0;
+            display: block;
+            background: var(--paper);
+        }
+
+        .reader-loading {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            color: var(--paper-dim);
+            font-family: var(--mono);
+            font-size: 13px;
+            background: var(--surface);
+            z-index: 3;
+            transition: opacity .35s ease;
+        }
+        .reader-loading.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        .spinner {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            border: 2px solid var(--line);
+            border-top-color: var(--amber);
+            animation: spin 0.9s linear infinite;
+        }
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .protect-shield {
+            position: absolute;
+            inset: 0;
+            z-index: 2;
+            background: transparent;
+            pointer-events: none;
+            transition: background .2s ease;
+        }
+
+        .popout-mask {
+            position: absolute;
+            top: 0;
+            right: 0;
+            z-index: 4;
+            width: 58px;
+            height: 58px;
+            background: var(--surface);
+            border-bottom-left-radius: 10px;
+        }
+
+        .watermark {
+            position: absolute;
+            inset: 0;
+            z-index: 2;
+            pointer-events: none;
+            display: flex;
+            flex-wrap: wrap;
+            align-content: space-between;
+            opacity: 0.10;
+            transform: rotate(-22deg) scale(1.3);
+            color: #000;
+            font-family: var(--mono);
+            font-size: 12px;
+            letter-spacing: .05em;
+            user-select: none;
+        }
+        .watermark span {
+            width: 33%;
+            padding: 10px;
+            white-space: nowrap;
+        }
+
+        .reader-hint {
+            margin-top: 16px;
+            font-size: 13px;
+            color: var(--paper-dim);
+            text-align: center;
+            max-width: 520px;
+        }
+
+        .devtools-warning {
+            position: fixed;
+            inset: 0;
+            z-index: 999;
+            background: rgba(10, 11, 16, .96);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: var(--paper);
+            font-family: var(--serif);
+            font-size: 22px;
+        }
+        .devtools-warning .small {
+            font-family: var(--sans);
+            font-size: 14px;
+            color: var(--paper-dim);
+            margin-top: 8px;
+        }
+        .hidden {
+            display: none !important;
+        }
+
+        /* ============ DONATE BAND ============ */
+        .donate-band {
+            position: relative;
+            z-index: 2;
+            margin: 64px 6vw 0;
+            padding: 34px clamp(20px, 4vw, 44px);
+            background: linear-gradient(135deg, var(--surface), var(--surface-2));
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+        .donate-copy h2 {
+            font-family: var(--serif);
+            font-style: italic;
+            font-weight: 600;
+            margin: 0 0 6px;
+            font-size: 22px;
+        }
+        .donate-copy p {
+            margin: 0;
+            color: var(--paper-dim);
+            font-size: 14px;
+            max-width: 46ch;
+        }
+
+        .donate-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            background: var(--amber);
+            color: #201202;
+            border: none;
+            font-family: var(--sans);
+            font-weight: 600;
+            font-size: 14px;
+            padding: 13px 22px;
+            border-radius: 999px;
+            cursor: pointer;
+            text-decoration: none;
+            white-space: nowrap;
+            transition: transform .15s ease, box-shadow .2s ease;
+        }
+        .donate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 24px -10px rgba(232, 163, 61, .55);
+        }
+        .donate-btn.full-width {
+            width: 100%;
+            justify-content: center;
+            margin-top: 14px;
+        }
+
+        /* ============ COMMENTS ============ */
+        .comments-section {
+            position: relative;
+            z-index: 2;
+            padding: 64px 6vw 40px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .comments-section h2 {
+            font-family: var(--serif);
+            font-style: italic;
+            font-weight: 600;
+            font-size: 26px;
+            margin: 0 0 6px;
+        }
+        .comments-sub {
+            color: var(--paper-dim);
+            font-size: 14px;
+            margin: 0 0 26px;
+        }
+
+        /* ============ FOOTER ============ */
+        .site-footer {
+            position: relative;
+            z-index: 2;
+            padding: 40px 6vw 50px;
+            color: var(--paper-dim);
+            font-size: 13px;
+            border-top: 1px solid var(--line);
+            margin-top: 20px;
+        }
+
+        .footer-inner {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 48px;
+            max-width: 1200px;
+            margin: 0 auto;
+            justify-content: space-between;
+        }
+
+        .footer-legal {
+            flex: 2;
+            min-width: 280px;
+        }
+        .footer-legal p {
+            margin: 0 0 10px;
+            line-height: 1.6;
+        }
+        .footer-legal strong {
+            color: var(--paper);
+        }
+
+        .footer-link {
+            color: var(--amber);
+            text-decoration: none;
+            border-bottom: 1px dotted var(--amber-dim);
+            cursor: pointer;
+        }
+        .footer-link:hover {
+            color: var(--paper);
+            border-bottom-color: var(--paper);
+        }
+
+        .footer-heart {
+            margin-top: 12px;
+            color: var(--paper-dim);
+        }
+
+        .footer-join {
+            flex: 1;
+            min-width: 240px;
+            background: var(--surface);
+            padding: 20px 24px;
+            border-radius: var(--radius);
+            border: 1px solid var(--line);
+        }
+        .footer-join h3 {
+            font-family: var(--serif);
+            font-style: italic;
+            font-weight: 600;
+            font-size: 20px;
+            margin: 0 0 10px;
+            color: var(--paper);
+        }
+        .footer-join p {
+            margin: 0 0 12px;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+        .footer-join-tagline {
+            margin-top: 12px;
+            font-style: italic;
+            color: var(--paper-dim);
+        }
+
+        .footer-join-btn {
+            display: inline-block;
+            background: var(--amber);
+            color: #201202;
+            font-weight: 600;
+            font-size: 14px;
+            padding: 10px 22px;
+            border-radius: 999px;
+            text-decoration: none;
+            transition: transform .15s ease, box-shadow .2s ease;
+            margin-top: 4px;
+        }
+        .footer-join-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px -8px rgba(232, 163, 61, .5);
+        }
+
+        /* ============ MODALS ============ */
+        .modal-backdrop {
+            position: fixed;
+            inset: 0;
+            z-index: 1000;
+            background: rgba(8, 9, 13, .72);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .modal {
+            position: relative;
+            width: min(500px, 100%);
+            max-height: 90vh;
+            overflow-y: auto;
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            padding: 28px;
+            animation: modalIn .25s ease;
+        }
+        .modal-legal {
+            width: min(600px, 100%);
+        }
+        @keyframes modalIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .modal h3 {
+            font-family: var(--serif);
+            font-style: italic;
+            margin: 0 0 10px;
+            font-size: 20px;
+            color: var(--paper);
+        }
+        .modal h4 {
+            font-family: var(--serif);
+            font-style: italic;
+            font-size: 18px;
+            margin: 20px 0 8px;
+            color: var(--paper);
+        }
+        .modal p {
+            color: var(--paper-dim);
+            font-size: 14px;
+            line-height: 1.7;
+            margin: 0 0 12px;
+        }
+        .modal strong {
+            color: var(--paper);
+        }
+        .modal-close {
+            position: absolute;
+            top: 14px;
+            right: 16px;
+            background: none;
+            border: none;
+            color: var(--paper-dim);
+            font-size: 22px;
+            cursor: pointer;
+            line-height: 1;
+        }
+        .modal-close:hover {
+            color: var(--paper);
+        }
+
+        .donate-message-box {
+            background: var(--ink-2);
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            padding: 14px;
+            margin: 14px 0;
+        }
+        .donate-message-box p {
+            color: var(--paper);
+            font-size: 14px;
+            margin: 0 0 10px;
+        }
+        .copy-btn {
+            background: var(--surface-2);
+            color: var(--paper);
+            border: 1px solid var(--line);
+            font-size: 13px;
+            padding: 8px 14px;
+            border-radius: 999px;
+            cursor: pointer;
+        }
+        .copy-btn.copied {
+            border-color: var(--amber);
+            color: var(--amber);
+        }
+        .modal-note {
+            font-size: 12px;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .legal-btn {
+            display: inline-block;
+            background: var(--amber);
+            color: #201202;
+            font-weight: 600;
+            font-size: 14px;
+            padding: 10px 24px;
+            border-radius: 999px;
+            text-decoration: none;
+            transition: transform .15s ease, box-shadow .2s ease;
+            margin: 6px 0 12px;
+            border: none;
+            cursor: pointer;
+        }
+        .legal-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px -8px rgba(232, 163, 61, .5);
+        }
+
+        .modal hr {
+            border: none;
+            border-top: 1px solid var(--line);
+            margin: 18px 0;
+        }
+
+        @media (max-width: 640px) {
+            .site-header {
+                padding: 34px 5vw 22px;
+            }
+            .reader-frame {
+                aspect-ratio: 3/4;
+            }
+            .footer-inner {
+                flex-direction: column;
+                gap: 28px;
+            }
+            .footer-join {
+                padding: 16px 18px;
+            }
+            .modal {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="grain" aria-hidden="true"></div>
+
+    <!-- ============ HEADER ============ -->
+    <header class="site-header">
+        <div class="brand">
+            <span class="eyebrow">Now Reading</span>
+            <h1 id="bookTitle">The Book Title Goes Here</h1>
+            <p id="bookAuthor">by Light Shadow Knight</p>
+        </div>
+
+        <div class="stats" role="group" aria-label="Book stats">
+            <button id="likeBtn" class="stat-pill" aria-pressed="false" title="Like this book">
+                <svg class="icon heart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 21s-7.5-4.6-10-9.1C.3 8.4 2 4.5 6 4c2.2-.3 4 .9 6 3.3C14 4.9 15.8 3.7 18 4c4 .5 5.7 4.4 4 7.9C19.5 16.4 12 21 12 21z"/>
+                </svg>
+                <span id="likeCount">0</span>
+            </button>
+            <div class="stat-pill stat-static" title="Views">
+                <svg class="icon eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/>
+                    <circle cx="12" cy="12" r="3"/>
+                </svg>
+                <span id="viewCount">0</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- ============ READER ============ -->
+    <main class="reader-shell">
+        <div class="lamp-glow" aria-hidden="true"></div>
+
+        <div class="reader-frame" id="readerFrame">
+            <div class="reader-loading" id="readerLoading">
+                <div class="spinner"></div>
+                <p>Opening the book…</p>
+            </div>
+            <iframe id="bookFrame" title="Book viewer" loading="lazy" allow="fullscreen"></iframe>
+
+            <div class="protect-shield" id="protectShield"></div>
+            <div class="popout-mask" aria-hidden="true"></div>
+            <div class="watermark" id="watermark" aria-hidden="true"></div>
+        </div>
+
+        <p class="reader-hint">This copy is watermarked and set to view-only. Please don't redistribute it — thank you for respecting that.</p>
+    </main>
+
+    <!-- ============ DEVTOOLS WARNING ============ -->
+    <div class="devtools-warning hidden" id="devtoolsWarning">
+        <div class="devtools-warning-inner">
+            <p>Reader tools are paused while developer tools are open.</p>
+            <p class="small">Close them to keep reading.</p>
+        </div>
+    </div>
+
+    <!-- ============ DONATE BAND ============ -->
+    <section class="donate-band">
+        <div class="donate-copy">
+            <h2>Enjoying it so far?</h2>
+            <p>If this story is worth a coffee, you can support it directly — and join the donor shout-out list.</p>
+        </div>
+        <button id="donateBtn" class="donate-btn">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21c-4-3-9-6.5-9-11.5A5.5 5.5 0 0 1 12 6a5.5 5.5 0 0 1 9 3.5C21 14.5 16 18 12 21z"/></svg>
+            Donate
+        </button>
+    </section>
+
+    <!-- ============ COMMENTS ============ -->
+    <section class="comments-section">
+        <h2>Notes in the margin</h2>
+        <p class="comments-sub">Leave a line, reply to someone else's, drop a GIF or a sticker — it's all fair game.</p>
+        <div id="giscus-container">
+            <!-- Giscus script with number mapping -->
+            <script src="https://giscus.app/client.js"
+                data-repo="thelightwebofficial-cmyk/Chat"
+                data-repo-id="R_kgDOTttNbA"
+                data-mapping="number"
+                data-term="1"
+                data-reactions-enabled="1"
+                data-emit-metadata="0"
+                data-input-position="bottom"
+                data-theme="preferred_color_scheme"
+                data-lang="en"
+                crossorigin="anonymous"
+                async>
+            </script>
+        </div>
+    </section>
+
+    <!-- ============ FOOTER ============ -->
+    <footer class="site-footer">
+        <div class="footer-inner">
+
+            <div class="footer-legal">
+                <p><strong>© 2026 Light. All Rights Reserved.</strong></p>
+                <p><strong>Voice of the Forgotten (VOF)</strong> is an original work by <strong>Light</strong> under <strong>Light Web Official</strong>.</p>
+                <p>All story content, characters, artwork, UI, logos, and other creative assets are protected by copyright and applicable intellectual property laws. Unauthorized copying, reproduction, redistribution, or commercial use is prohibited without prior written permission.</p>
+                <p>By using this website, you agree to our <a href="#" class="footer-link" data-modal="terms">Terms &amp; Conditions</a>, <a href="#" class="footer-link" data-modal="privacy">Privacy Policy</a>, and <a href="#" class="footer-link" data-modal="community">Community Guidelines</a>.</p>
+                <p class="footer-heart">Made with ❤️ by <strong>Light Web Official</strong>.</p>
+            </div>
+
+            <div class="footer-join">
+                <h3>Join the VOF Realm</h3>
+                <p>Become a part of the <strong>Light Web Official</strong> community on Discord — connect with creators, readers, artists, developers, and storytellers from around the world.</p>
+                <p>Discover original projects, share your ideas, participate in discussions, and stay up to date with the latest releases from <strong>Voice of the Forgotten (VOF)</strong> and other creations.</p>
+                <a href="https://discord.gg/hkkKYfQwVg" target="_blank" rel="noopener noreferrer" class="footer-join-btn">Join our Discord →</a>
+                <p class="footer-join-tagline">We'd love to have you with us. 💙</p>
+            </div>
+
+        </div>
+    </footer>
+
+    <!-- ============ DONATE MODAL ============ -->
+    <div class="modal-backdrop hidden" id="donateModal">
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="donateModalTitle">
+            <button class="modal-close" id="donateModalClose" aria-label="Close">&times;</button>
+            <h3 id="donateModalTitle">Support on Instagram</h3>
+            <p>Instagram doesn't allow websites to pre-fill a DM, so here's a message ready to paste:</p>
+            <div class="donate-message-box">
+                <p id="donateMessageText">Hey! I just read your book and I'd like to donate — count me in for the donor community, and I'd love a shout-out too 🙌</p>
+                <button id="copyMessageBtn" class="copy-btn">Copy message</button>
+            </div>
+            <a id="openInstagramBtn" href="https://ig.me/m/light_shadowknight" target="_blank" rel="noopener noreferrer" class="donate-btn full-width">
+                Open Instagram DM
+            </a>
+            <p class="modal-note">Paste the message once the chat opens — that's it.</p>
+        </div>
+    </div>
+
+    <!-- ============ LEGAL MODAL (dynamic) ============ -->
+    <div class="modal-backdrop hidden" id="legalModal">
+        <div class="modal modal-legal" role="dialog" aria-modal="true" aria-labelledby="legalModalTitle">
+            <button class="modal-close" id="legalModalClose" aria-label="Close">&times;</button>
+            <div id="legalModalContent">
+                <!-- dynamically populated -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* =========================================================
+           CONFIG — fill these in before you publish.
+           ========================================================= */
+        const CONFIG = {
+            bookTitle: "The Book Title Goes Here",
+            bookAuthor: "Light Shadow Knight",
+            driveFileId: "1b6KmNMHXgLz1QhLyGX5Oo2QpUDJEcbyQ",
+            counterNamespace: "thelightwebofficial-cmyk-chat-2026",
+            viewCounterName: "book-views",
+            likeCounterName: "book-likes",
+            instagramHandle: "light_shadowknight",
+        };
+
+        /* =========================================================
+           COUNTERS — CounterAPI V1
+           ========================================================= */
+        const API_BASE = "https://api.counterapi.dev/v1";
+
+        function extractCount(payload) {
+            const d = payload?.data ?? payload ?? {};
+            return d.up_count ?? d.count ?? d.value ?? null;
+        }
+
+        async function bumpCounter(counterName) {
+            try {
+                const res = await fetch(
+                    `${API_BASE}/${encodeURIComponent(CONFIG.counterNamespace)}/${encodeURIComponent(counterName)}/up`
+                );
+                return extractCount(await res.json());
+            } catch (err) {
+                console.warn("Counter request failed:", err);
+                return null;
+            }
+        }
+
+        async function fetchCounter(counterName) {
+            try {
+                const res = await fetch(
+                    `${API_BASE}/${encodeURIComponent(CONFIG.counterNamespace)}/${encodeURIComponent(counterName)}`
+                );
+                return extractCount(await res.json()) ?? 0;
+            } catch (err) {
+                console.warn("Counter fetch failed:", err);
+                return 0;
+            }
+        }
+
+        async function dropCounter(counterName) {
+            try {
+                const res = await fetch(
+                    `${API_BASE}/${encodeURIComponent(CONFIG.counterNamespace)}/${encodeURIComponent(counterName)}/down`
+                );
+                return extractCount(await res.json());
+            } catch (err) {
+                console.warn("Counter down request failed:", err);
+                return null;
+            }
+        }
+
+        function formatCount(n) {
+            if (n === null || n === undefined) return "—";
+            if (n >= 1000) return (n / 1000).toFixed(1).replace(/\.0$/, "") + "k";
+            return String(n);
+        }
+
+        /* =========================================================
+           INIT
+           ========================================================= */
+        document.addEventListener("DOMContentLoaded", () => {
+            document.getElementById("bookTitle").textContent = CONFIG.bookTitle;
+            document.getElementById("bookAuthor").textContent = "by " + CONFIG.bookAuthor;
+
+            setupReader();
+            setupViewCounter();
+            setupLikeButton();
+            setupWatermark();
+            setupProtection();
+            setupDonateModal();
+            setupLegalModals();
+            // Giscus is loaded statically, no extra setup needed.
+        });
+
+        /* ---------- Reader ---------- */
+        function setupReader() {
+            const frame = document.getElementById("bookFrame");
+            const loading = document.getElementById("readerLoading");
+            frame.src = `https://drive.google.com/file/d/${CONFIG.driveFileId}/preview`;
+            frame.addEventListener("load", () => loading.classList.add("hidden"));
+            setTimeout(() => loading.classList.add("hidden"), 4000);
+        }
+
+        /* ---------- View counter ---------- */
+        async function setupViewCounter() {
+            const el = document.getElementById("viewCount");
+            const total = await bumpCounter(CONFIG.viewCounterName);
+            el.textContent = formatCount(total);
+        }
+
+        /* ---------- Like button ---------- */
+        async function setupLikeButton() {
+            const btn = document.getElementById("likeBtn");
+            const countEl = document.getElementById("likeCount");
+            const storageKey = "bookLiked";
+
+            const current = await fetchCounter(CONFIG.likeCounterName);
+            countEl.textContent = formatCount(current);
+
+            const alreadyLiked = localStorage.getItem(storageKey) === "true";
+            btn.setAttribute("aria-pressed", String(alreadyLiked));
+
+            btn.addEventListener("click", async () => {
+                const liked = btn.getAttribute("aria-pressed") === "true";
+                btn.classList.add("pulse");
+                setTimeout(() => btn.classList.remove("pulse"), 400);
+
+                if (!liked) {
+                    btn.setAttribute("aria-pressed", "true");
+                    localStorage.setItem(storageKey, "true");
+                    const total = await bumpCounter(CONFIG.likeCounterName);
+                    if (total !== null) countEl.textContent = formatCount(total);
+                } else {
+                    btn.setAttribute("aria-pressed", "false");
+                    localStorage.removeItem(storageKey);
+                    const total = await dropCounter(CONFIG.likeCounterName);
+                    if (total !== null) countEl.textContent = formatCount(total);
+                }
+            });
+        }
+
+        /* ---------- Watermark ---------- */
+        function setupWatermark() {
+            const wm = document.getElementById("watermark");
+            const label = `${CONFIG.bookTitle} · read-only copy`;
+            const tileCount = 30;
+            wm.innerHTML = Array.from({ length: tileCount })
+                .map(() => `<span>${label}</span>`)
+                .join("");
+        }
+
+        /* ---------- Protection ---------- */
+        function setupProtection() {
+            const warning = document.getElementById("devtoolsWarning");
+
+            ["contextmenu", "dragstart", "selectstart"].forEach((evt) => {
+                document.body.addEventListener(evt, (e) => e.preventDefault());
+            });
+
+            document.addEventListener("keydown", (e) => {
+                const key = e.key.toLowerCase();
+                const blockedWithCtrl = ["c", "s", "p", "u", "x"];
+                if ((e.ctrlKey || e.metaKey) && blockedWithCtrl.includes(key)) {
+                    e.preventDefault();
+                }
+                if (key === "printscreen") {
+                    flashProtectNotice();
+                }
+                if (e.key === "F12" || ((e.ctrlKey || e.metaKey) && e.shiftKey && ["i", "j", "c"].includes(key))) {
+                    e.preventDefault();
+                }
+            });
+
+            const threshold = 160;
+            setInterval(() => {
+                const widthGap = window.outerWidth - window.innerWidth > threshold;
+                const heightGap = window.outerHeight - window.innerHeight > threshold;
+                warning.classList.toggle("hidden", !(widthGap || heightGap));
+            }, 800);
+        }
+
+        function flashProtectNotice() {
+            const shield = document.getElementById("protectShield");
+            shield.style.background = "rgba(16,18,26,0.97)";
+            setTimeout(() => { shield.style.background = "transparent"; }, 600);
+        }
+
+        /* ---------- Donate modal ---------- */
+        function setupDonateModal() {
+            const openBtn = document.getElementById("donateBtn");
+            const modal = document.getElementById("donateModal");
+            const closeBtn = document.getElementById("donateModalClose");
+            const copyBtn = document.getElementById("copyMessageBtn");
+            const messageEl = document.getElementById("donateMessageText");
+            const igLink = document.getElementById("openInstagramBtn");
+
+            igLink.href = `https://ig.me/m/${CONFIG.instagramHandle}`;
+
+            openBtn.addEventListener("click", () => modal.classList.remove("hidden"));
+            closeBtn.addEventListener("click", () => modal.classList.add("hidden"));
+            modal.addEventListener("click", (e) => { if (e.target === modal) modal.classList.add("hidden"); });
+
+            copyBtn.addEventListener("click", async () => {
+                try {
+                    await navigator.clipboard.writeText(messageEl.textContent.trim());
+                    copyBtn.textContent = "Copied ✓";
+                    copyBtn.classList.add("copied");
+                    setTimeout(() => {
+                        copyBtn.textContent = "Copy message";
+                        copyBtn.classList.remove("copied");
+                    }, 1800);
+                } catch (err) {
+                    console.warn("Clipboard copy failed:", err);
+                }
+            });
+        }
+
+        /* ---------- Legal modals ---------- */
+        function setupLegalModals() {
+            const modal = document.getElementById("legalModal");
+            const closeBtn = document.getElementById("legalModalClose");
+            const content = document.getElementById("legalModalContent");
+
+            closeBtn.addEventListener("click", () => modal.classList.add("hidden"));
+            modal.addEventListener("click", (e) => { if (e.target === modal) modal.classList.add("hidden"); });
+
+            const legalData = {
+                terms: {
+                    title: "Terms & Conditions",
+                    body: `
+                <p><strong>© 2026 Light. All Rights Reserved.</strong></p>
+                <p><strong>Voice of the Forgotten (VOF)</strong> is an original work by <strong>Light</strong> under <strong>Light Web Official</strong>.</p>
+                <p>All story content, characters, artwork, UI, logos, and other creative assets are protected by copyright and applicable intellectual property laws. Unauthorized copying, reproduction, redistribution, modification, or commercial use is prohibited without prior written permission.</p>
+                <p>By using this website, you agree to our <strong>Terms &amp; Conditions</strong>, <strong>Privacy Policy</strong>, and <strong>Community Guidelines</strong>.</p>
+                <a href="https://sites.google.com/view/lightwebofficialstudio/terms-conditions?authuser=0" target="_blank" rel="noopener noreferrer" class="legal-btn">View full Terms →</a>
+                <p style="margin-top:8px;">Made with ❤️ by <strong>Light Web Official</strong>.</p>
+              `
+                },
+                privacy: {
+                    title: "Privacy Policy",
+                    body: `
+                <p>Your privacy matters to us. <strong>Voice of the Forgotten (VOF)</strong> and <strong>Light Web Official</strong> are committed to protecting your personal information and providing a safe experience for all users.</p>
+                <p>By using this website, you agree to the collection and use of information in accordance with our Privacy Policy.</p>
+                <p>For detailed information about how we collect, use, store, and protect your data, please visit:</p>
+                <a href="https://sites.google.com/view/lightwebofficialstudio/privacy-policy?authuser=0" target="_blank" rel="noopener noreferrer" class="legal-btn">Read Privacy Policy →</a>
+              `
+                },
+                community: {
+                    title: "Community Guidelines",
+                    body: `
+                <p>Our community is built on creativity, respect, and collaboration. We encourage everyone to create, share, and discuss in a friendly and welcoming environment.</p>
+                <p>By participating in the <strong>Voice of the Forgotten (VOF)</strong> community, you agree to follow our Community Guidelines and treat all members with respect.</p>
+                <p>For the complete Community Guidelines, please visit:</p>
+                <a href="https://sites.google.com/view/lightwebofficialstudio/community-guidelines?authuser=0" target="_blank" rel="noopener noreferrer" class="legal-btn">View Community Guidelines →</a>
+              `
+                }
+            };
+
+            document.querySelectorAll('.footer-link[data-modal]').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const key = link.getAttribute('data-modal');
+                    const data = legalData[key];
+                    if (!data) return;
+                    content.innerHTML = `
+                <h3>${data.title}</h3>
+                <hr>
+                ${data.body}
+              `;
+                    modal.classList.remove('hidden');
+                });
+            });
+        }
+    </script>
+
+</body>
+</html>
