@@ -114,7 +114,7 @@ Example:
 
 > Fan Content based on **Voice of the Forgotten (VOF)** by **Light**.
 >
-> Official Website: https://voice-of-the-forgotten-vof-.github.io
+> Official Website: https://thelightwebofficial-cmyk.github.io/Voice-of-the-Forgotten-VOF-.github.io/
 
 ---
 
