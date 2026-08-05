@@ -22,7 +22,7 @@ The platform is designed to provide an immersive reading experience with a moder
 
 ## 🌐 Official Links
 
-* **Website:** https://voice-of-the-forgotten-vof-.github.io
+* **Website:** https://thelightwebofficial-cmyk.github.io/Voice-of-the-Forgotten-VOF-.github.io/
 * **Light Web Official:** https://sites.google.com/view/lightwebofficialstudio/
 * **Terms & Conditions:** https://sites.google.com/view/lightwebofficialstudio/terms-conditions?authuser=0
 * **Privacy Policy:** https://sites.google.com/view/lightwebofficialstudio/privacy-policy?authuser=0
