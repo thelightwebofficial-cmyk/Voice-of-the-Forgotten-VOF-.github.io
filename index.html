@@ -10,6 +10,9 @@
     <!-- Zoomment verification meta tag -->
     <meta name="zoomment" content="6a72258e44ee0b484aa2e2c3" />
 
+    <!-- Security: prevent indexing, discourage bots -->
+    <meta name="robots" content="noindex, nofollow" />
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -67,6 +70,45 @@
             overflow-x: hidden;
         }
 
+        /* ============ COPY / SELECT / DRAG LOCKDOWN ============ */
+        html, body {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            -webkit-touch-callout: none; /* iOS long-press menu */
+        }
+        img, svg, .watermark {
+            -webkit-user-drag: none;
+            user-drag: none;
+            pointer-events: none;
+        }
+        /* Let real UI controls still work — re-enable pointer events + selection on interactive bits */
+        button, a, input, textarea, .modal, .comments-section, #zoomment,
+        .footer-link, .modal-close, .copy-btn {
+            pointer-events: auto;
+        }
+        input, textarea {
+            -webkit-user-select: text;
+            user-select: text;
+        }
+        /* Hide content entirely when the page is sent to a printer / print-to-PDF */
+        @media print {
+            body * { display: none !important; }
+            body::after {
+                content: "Printing is disabled for this content.";
+                display: block !important;
+                padding: 4em;
+                font-family: sans-serif;
+                font-size: 1.2em;
+            }
+        }
+        /* Blur the reader when the tab/window loses focus — reduces casual screen-recording/screenshot capture */
+        .reader-frame.blurred {
+            filter: blur(22px) brightness(0.4);
+            transition: filter 0.15s ease;
+        }
+
         .grain {
             position: fixed;
             inset: 0;
@@ -113,61 +155,6 @@
             margin: 6px 0 0;
             color: var(--paper-dim);
             font-size: 15px;
-        }
-
-        .stats {
-            display: flex;
-            gap: 10px;
-        }
-
-        .stat-pill {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background: var(--surface);
-            border: 1px solid var(--line);
-            color: var(--paper);
-            font-family: var(--mono);
-            font-size: 14px;
-            padding: 9px 15px;
-            border-radius: 999px;
-            cursor: pointer;
-            transition: transform .15s ease, border-color .2s ease, background .2s ease;
-        }
-        .stat-pill.stat-static {
-            cursor: default;
-        }
-        .stat-pill .icon {
-            width: 16px;
-            height: 16px;
-            color: var(--slate);
-        }
-
-        #likeBtn:hover {
-            border-color: var(--amber-dim);
-            transform: translateY(-1px);
-        }
-        #likeBtn[aria-pressed="true"] {
-            background: linear-gradient(180deg, rgba(232, 163, 61, .18), rgba(232, 163, 61, .06));
-            border-color: var(--amber);
-        }
-        #likeBtn[aria-pressed="true"] .heart {
-            color: var(--amber);
-            fill: var(--amber);
-        }
-        #likeBtn.pulse {
-            animation: heartPulse .4s ease;
-        }
-        @keyframes heartPulse {
-            0% {
-                transform: scale(1);
-            }
-            40% {
-                transform: scale(1.18);
-            }
-            100% {
-                transform: scale(1);
-            }
         }
 
         /* ============ READER ============ */
@@ -511,7 +498,7 @@
         }
         .modal {
             position: relative;
-            width: min(500px, 100%);
+            width: min(600px, 100%);
             max-height: 90vh;
             overflow-y: auto;
             background: var(--surface);
@@ -521,7 +508,7 @@
             animation: modalIn .25s ease;
         }
         .modal-legal {
-            width: min(600px, 100%);
+            width: min(700px, 100%);
         }
         @keyframes modalIn {
             from {
@@ -553,8 +540,15 @@
             line-height: 1.7;
             margin: 0 0 12px;
         }
-        .modal strong {
-            color: var(--paper);
+        .modal ul,
+        .modal ol {
+            color: var(--paper-dim);
+            font-size: 14px;
+            line-height: 1.7;
+            padding-left: 24px;
+        }
+        .modal li {
+            margin-bottom: 6px;
         }
         .modal-close {
             position: absolute;
@@ -627,6 +621,29 @@
             margin: 18px 0;
         }
 
+        /* Anti-bot / security banner */
+        .security-banner {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 9999;
+            background: var(--surface);
+            border: 1px solid var(--danger);
+            color: var(--danger);
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-family: var(--sans);
+            display: none;
+            text-align: center;
+            max-width: 90%;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+        .security-banner.visible {
+            display: block;
+        }
+
         @media (max-width: 640px) {
             .site-header {
                 padding: 34px 5vw 22px;
@@ -643,6 +660,7 @@
             }
             .modal {
                 padding: 20px;
+                width: 100%;
             }
         }
     </style>
@@ -651,28 +669,15 @@
 
     <div class="grain" aria-hidden="true"></div>
 
+    <!-- Security banner for bot detection -->
+    <div class="security-banner" id="securityBanner">⚠️ Suspicious activity detected — please disable automation tools.</div>
+
     <!-- ============ HEADER ============ -->
     <header class="site-header">
         <div class="brand">
             <span class="eyebrow">Now Reading</span>
             <h1 id="bookTitle">Voice of the Forgotten (VOF)</h1>
             <p id="bookAuthor">by Light Shadow Knight</p>
-        </div>
-
-        <div class="stats" role="group" aria-label="Book stats">
-            <button id="likeBtn" class="stat-pill" aria-pressed="false" title="Like this book">
-                <svg class="icon heart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M12 21s-7.5-4.6-10-9.1C.3 8.4 2 4.5 6 4c2.2-.3 4 .9 6 3.3C14 4.9 15.8 3.7 18 4c4 .5 5.7 4.4 4 7.9C19.5 16.4 12 21 12 21z"/>
-                </svg>
-                <span id="likeCount">0</span>
-            </button>
-            <div class="stat-pill stat-static" title="Views">
-                <svg class="icon eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/>
-                    <circle cx="12" cy="12" r="3"/>
-                </svg>
-                <span id="viewCount">0</span>
-            </div>
         </div>
     </header>
 
@@ -731,7 +736,14 @@
                 <p><strong>© 2026 Light. All Rights Reserved.</strong></p>
                 <p><strong>Voice of the Forgotten (VOF)</strong> is an original work by <strong>Light</strong> under <strong>Light Web Official</strong>.</p>
                 <p>All story content, characters, artwork, UI, logos, and other creative assets are protected by copyright and applicable intellectual property laws. Unauthorized copying, reproduction, redistribution, or commercial use is prohibited without prior written permission.</p>
-                <p>By using this website, you agree to our <a href="#" class="footer-link" data-modal="terms">Terms &amp; Conditions</a>, <a href="#" class="footer-link" data-modal="privacy">Privacy Policy</a>, and <a href="#" class="footer-link" data-modal="community">Community Guidelines</a>.</p>
+                <p>
+                    By using this website, you agree to our
+                    <a href="https://sites.google.com/view/lightwebofficialstudio/terms-conditions?authuser=0" target="_blank" rel="noopener noreferrer" class="footer-link">Terms &amp; Conditions</a>,
+                    <a href="https://sites.google.com/view/lightwebofficialstudio/privacy-policy?authuser=0" target="_blank" rel="noopener noreferrer" class="footer-link">Privacy Policy</a>,
+                    <a href="https://sites.google.com/view/lightwebofficialstudio/community-guidelines?authuser=0" target="_blank" rel="noopener noreferrer" class="footer-link">Community Guidelines</a>,
+                    <a href="#" class="footer-link" data-modal="fancontent">Fan Content Policy</a>, and
+                    <a href="#" class="footer-link" data-modal="license">License</a>.
+                </p>
                 <p class="footer-heart">Made with ❤️ by <strong>Light Web Official</strong>.</p>
             </div>
 
@@ -775,83 +787,78 @@
 
     <script>
         /* =========================================================
-           CONFIG — fill these in before you publish.
+           CONFIG
            ========================================================= */
         const CONFIG = {
             bookTitle: "Voice of the Forgotten (VOF)",
             bookAuthor: "Light Shadow Knight",
             driveFileId: "1b6KmNMHXgLz1QhLyGX5Oo2QpUDJEcbyQ",
-            counterNamespace: "thelightwebofficial-cmyk-chat-2026",
-            viewCounterName: "book-views",
-            likeCounterName: "book-likes",
             instagramHandle: "light_shadowknight",
         };
 
         /* =========================================================
-           COUNTERS — CounterAPI V1
+           ANTI-BOT / SECURITY
            ========================================================= */
-        const API_BASE = "https://api.counterapi.dev/v1";
+        function detectBot() {
+            const securityBanner = document.getElementById('securityBanner');
+            let isBot = false;
 
-        function extractCount(payload) {
-            const d = payload?.data ?? payload ?? {};
-            return d.up_count ?? d.count ?? d.value ?? null;
-        }
-
-        async function bumpCounter(counterName) {
-            try {
-                const res = await fetch(
-                    `${API_BASE}/${encodeURIComponent(CONFIG.counterNamespace)}/${encodeURIComponent(counterName)}/up`
-                );
-                return extractCount(await res.json());
-            } catch (err) {
-                console.warn("Counter request failed:", err);
-                return null;
+            // 1. Check for headless browser / automation
+            if (navigator.webdriver === true) {
+                isBot = true;
             }
-        }
 
-        async function fetchCounter(counterName) {
-            try {
-                const res = await fetch(
-                    `${API_BASE}/${encodeURIComponent(CONFIG.counterNamespace)}/${encodeURIComponent(counterName)}`
-                );
-                return extractCount(await res.json()) ?? 0;
-            } catch (err) {
-                console.warn("Counter fetch failed:", err);
-                return 0;
+            // 2. Check user agent for common bot strings
+            const ua = navigator.userAgent.toLowerCase();
+            const botPatterns = ['bot', 'crawl', 'spider', 'headless', 'phantom', 'selenium', 'puppeteer'];
+            if (botPatterns.some(pattern => ua.includes(pattern))) {
+                isBot = true;
             }
-        }
 
-        async function dropCounter(counterName) {
-            try {
-                const res = await fetch(
-                    `${API_BASE}/${encodeURIComponent(CONFIG.counterNamespace)}/${encodeURIComponent(counterName)}/down`
-                );
-                return extractCount(await res.json());
-            } catch (err) {
-                console.warn("Counter down request failed:", err);
-                return null;
+            // 3. Check screen size: headless often has 0x0 or tiny
+            if (window.screen.width === 0 && window.screen.height === 0) {
+                isBot = true;
             }
-        }
 
-        function formatCount(n) {
-            if (n === null || n === undefined) return "—";
-            if (n >= 1000) return (n / 1000).toFixed(1).replace(/\.0$/, "") + "k";
-            return String(n);
+            if (isBot) {
+                securityBanner.textContent = '⚠️ Automated access detected. Please disable bots or scripts.';
+                securityBanner.classList.add('visible');
+                // Optionally block further actions
+                document.body.style.pointerEvents = 'none';
+                document.body.style.opacity = '0.3';
+                return true;
+            }
+            return false;
         }
 
         /* =========================================================
            INIT
            ========================================================= */
         document.addEventListener("DOMContentLoaded", () => {
+            // 1. Anti-bot check
+            const isBot = detectBot();
+            if (isBot) {
+                // Still show some content but with restrictions
+                return;
+            }
+
+            // 2. Set title/author
             document.getElementById("bookTitle").textContent = CONFIG.bookTitle;
             document.getElementById("bookAuthor").textContent = "by " + CONFIG.bookAuthor;
 
+            // 3. Setup reader
             setupReader();
-            setupViewCounter();
-            setupLikeButton();
+
+            // 4. Watermark
             setupWatermark();
+
+            // 5. Protection (right-click, keys, etc.)
             setupProtection();
+
+            // 6. Donate modal
             setupDonateModal();
+
+            // 7. Legal modals
             setupLegalModals();
         });
 
@@ -862,44 +869,6 @@
             frame.src = `https://drive.google.com/file/d/${CONFIG.driveFileId}/preview`;
             frame.addEventListener("load", () => loading.classList.add("hidden"));
             setTimeout(() => loading.classList.add("hidden"), 4000);
-        }
-
-        /* ---------- View counter ---------- */
-        async function setupViewCounter() {
-            const el = document.getElementById("viewCount");
-            const total = await bumpCounter(CONFIG.viewCounterName);
-            el.textContent = formatCount(total);
-        }
-
-        /* ---------- Like button ---------- */
-        async function setupLikeButton() {
-            const btn = document.getElementById("likeBtn");
-            const countEl = document.getElementById("likeCount");
-            const storageKey = "bookLiked";
-
-            const current = await fetchCounter(CONFIG.likeCounterName);
-            countEl.textContent = formatCount(current);
-
-            const alreadyLiked = localStorage.getItem(storageKey) === "true";
-            btn.setAttribute("aria-pressed", String(alreadyLiked));
-
-            btn.addEventListener("click", async () => {
-                const liked = btn.getAttribute("aria-pressed") === "true";
-                btn.classList.add("pulse");
-                setTimeout(() => btn.classList.remove("pulse"), 400);
-
-                if (!liked) {
-                    btn.setAttribute("aria-pressed", "true");
-                    localStorage.setItem(storageKey, "true");
-                    const total = await bumpCounter(CONFIG.likeCounterName);
-                    if (total !== null) countEl.textContent = formatCount(total);
-                } else {
-                    btn.setAttribute("aria-pressed", "false");
-                    localStorage.removeItem(storageKey);
-                    const total = await dropCounter(CONFIG.likeCounterName);
-                    if (total !== null) countEl.textContent = formatCount(total);
-                }
-            });
         }
 
         /* ---------- Watermark ---------- */
@@ -915,31 +884,89 @@
         /* ---------- Protection ---------- */
         function setupProtection() {
             const warning = document.getElementById("devtoolsWarning");
+            const readerFrame = document.getElementById("readerFrame");
 
+            // 1. Block right-click, drag, text selection, and copy/cut events
             ["contextmenu", "dragstart", "selectstart"].forEach((evt) => {
-                document.body.addEventListener(evt, (e) => e.preventDefault());
+                document.addEventListener(evt, (e) => e.preventDefault());
+            });
+            ["copy", "cut"].forEach((evt) => {
+                document.addEventListener(evt, (e) => {
+                    e.preventDefault();
+                    flashProtectNotice();
+                });
             });
 
+            // 2. Block common inspect / save / print / view-source shortcuts
             document.addEventListener("keydown", (e) => {
                 const key = e.key.toLowerCase();
-                const blockedWithCtrl = ["c", "s", "p", "u", "x"];
+                const blockedWithCtrl = ["c", "s", "p", "u", "x", "a"];
                 if ((e.ctrlKey || e.metaKey) && blockedWithCtrl.includes(key)) {
                     e.preventDefault();
+                    flashProtectNotice();
                 }
                 if (key === "printscreen") {
                     flashProtectNotice();
+                    // Best-effort: blank the clipboard image if the OS already grabbed one
+                    if (navigator.clipboard && navigator.clipboard.writeText) {
+                        navigator.clipboard.writeText("").catch(() => {});
+                    }
                 }
-                if (e.key === "F12" || ((e.ctrlKey || e.metaKey) && e.shiftKey && ["i", "j", "c"].includes(key))) {
+                const isDevtoolsShortcut =
+                    e.key === "F12" ||
+                    ((e.ctrlKey || e.metaKey) && e.shiftKey && ["i", "j", "c", "k"].includes(key)) ||
+                    ((e.ctrlKey || e.metaKey) && key === "u");
+                if (isDevtoolsShortcut) {
                     e.preventDefault();
+                    e.stopPropagation();
+                    warning.classList.remove("hidden");
                 }
             });
 
-            const threshold = 160;
+            // 3. Devtools detection — window size heuristic (works for docked panels)
+            const sizeThreshold = 160;
+            const checkSizeGap = () => {
+                const widthGap = window.outerWidth - window.innerWidth > sizeThreshold;
+                const heightGap = window.outerHeight - window.innerHeight > sizeThreshold;
+                return widthGap || heightGap;
+            };
+
+            // 4. Devtools detection — debugger timing heuristic (catches undocked/detached panels)
+            let devtoolsOpen = false;
+            const checkTimingGap = () => {
+                const start = performance.now();
+                // eslint-disable-next-line no-debugger
+                debugger;
+                const elapsed = performance.now() - start;
+                return elapsed > 100; // paused execution means devtools is open & stepping
+            };
+
             setInterval(() => {
-                const widthGap = window.outerWidth - window.innerWidth > threshold;
-                const heightGap = window.outerHeight - window.innerHeight > threshold;
-                warning.classList.toggle("hidden", !(widthGap || heightGap));
+                devtoolsOpen = checkSizeGap() || checkTimingGap();
+                warning.classList.toggle("hidden", !devtoolsOpen);
+                if (devtoolsOpen) {
+                    readerFrame.classList.add("blurred");
+                } else {
+                    readerFrame.classList.remove("blurred");
+                }
             }, 800);
+
+            // 5. Blur the reader whenever the window/tab loses focus
+            //    (reduces casual screenshotting / screen-recording of the open page)
+            window.addEventListener("blur", () => readerFrame.classList.add("blurred"));
+            window.addEventListener("focus", () => {
+                if (!devtoolsOpen) readerFrame.classList.remove("blurred");
+            });
+            document.addEventListener("visibilitychange", () => {
+                if (document.hidden) {
+                    readerFrame.classList.add("blurred");
+                } else if (!devtoolsOpen) {
+                    readerFrame.classList.remove("blurred");
+                }
+            });
+
+            // 6. Block browser print (Ctrl/Cmd+P is already caught above; this covers the Print menu item too)
+            window.addEventListener("beforeprint", () => flashProtectNotice());
         }
 
         function flashProtectNotice() {
@@ -987,35 +1014,113 @@
             closeBtn.addEventListener("click", () => modal.classList.add("hidden"));
             modal.addEventListener("click", (e) => { if (e.target === modal) modal.classList.add("hidden"); });
 
+            // Legal documents (full texts)
             const legalData = {
-                terms: {
-                    title: "Terms & Conditions",
+                fancontent: {
+                    title: "Fan Content Policy v1.0",
                     body: `
-                <p><strong>© 2026 Light. All Rights Reserved.</strong></p>
-                <p><strong>Voice of the Forgotten (VOF)</strong> is an original work by <strong>Light</strong> under <strong>Light Web Official</strong>.</p>
-                <p>All story content, characters, artwork, UI, logos, and other creative assets are protected by copyright and applicable intellectual property laws. Unauthorized copying, reproduction, redistribution, modification, or commercial use is prohibited without prior written permission.</p>
-                <p>By using this website, you agree to our <strong>Terms &amp; Conditions</strong>, <strong>Privacy Policy</strong>, and <strong>Community Guidelines</strong>.</p>
-                <a href="https://sites.google.com/view/lightwebofficialstudio/terms-conditions?authuser=0" target="_blank" rel="noopener noreferrer" class="legal-btn">View full Terms →</a>
-                <p style="margin-top:8px;">Made with ❤️ by <strong>Light Web Official</strong>.</p>
-              `
+                        <p><strong>Last Updated:</strong> August 2026</p>
+                        <p>First of all, <strong>thank you</strong> for supporting <strong>Voice of the Forgotten (VOF)</strong>! ❤️</p>
+                        <p>Whether you're making memes, fan art, edits, AMVs, theories, or reviews, your creativity helps the community grow. This policy explains what fan creations are welcome and what isn't.</p>
+                        <p>This policy applies to <strong>Voice of the Forgotten (VOF)</strong>, its story, characters, artwork, world, logos, and related materials created by <strong>Light</strong> under <strong>Light Web Official</strong>.</p>
+                        <hr>
+                        <h4>❤️ Our Philosophy</h4>
+                        <p>Voice of the Forgotten exists because of storytelling and creativity. We encourage fans to express themselves, inspire others, and share their passion while respecting the original work and fellow community members.</p>
+                        <h4>✅ Fan Content You May Create</h4>
+                        <p>You are welcome to create and share <strong>non-commercial</strong> fan content, including:</p>
+                        <ul>
+                            <li><strong>Artwork</strong> — fan art, digital illustrations, traditional drawings, character concepts, wallpapers</li>
+                            <li><strong>Videos</strong> — AMVs, edits, motion edits, short videos, YouTube/TikTok/Instagram Reels, animations</li>
+                            <li><strong>Memes</strong> — memes, joke edits, reaction images, GIFs</li>
+                            <li><strong>Discussions</strong> — reviews, theories, character analysis, story discussions, reaction posts</li>
+                            <li><strong>Creative Projects</strong> — fan posters, fan websites (that do not republish the story), cosplay, moodboards, playlists, tribute videos</li>
+                        </ul>
+                        <h4>📢 Sharing Your Fan Content</h4>
+                        <p>You may upload your fan creations to platforms such as YouTube, Instagram, Facebook, X (Twitter), Reddit, Discord, TikTok, Pinterest, or personal websites. Whenever possible, please credit <strong>Voice of the Forgotten (VOF)</strong>, mention <strong>Light</strong> as the original creator, and link to the official website.</p>
+                        <h4>💰 Commercial Use</h4>
+                        <p>Fan content created under this policy is <strong>for non-commercial purposes only</strong>. You may <strong>not</strong> sell fan art, merchandise, paid translations, NFTs, or license VOF content to others. If you'd like to collaborate commercially, please contact Light Web Official first.</p>
+                        <h4>🚫 What You May NOT Do</h4>
+                        <ul>
+                            <li>Upload the novel or chapters elsewhere</li>
+                            <li>Recreate the official reading experience</li>
+                            <li>Publish modified versions of the story</li>
+                            <li>Translate and publish the novel</li>
+                            <li>Claim VOF as your own work</li>
+                            <li>Remove copyright notices</li>
+                            <li>Mislead others into believing your work is official</li>
+                            <li>Use official artwork as your own creation without permission</li>
+                            <li>Use VOF to promote hate, harassment, discrimination, illegal activity, or harmful content</li>
+                            <li>Use VOF content to train AI models or datasets without written permission</li>
+                        </ul>
+                        <h4>🤖 AI-Generated Fan Content</h4>
+                        <p>AI-generated fan creations are welcome. If your work uses AI, please clearly mention the AI tool or model used and that the work is fan-created.</p>
+                        <h4>🛡️ Respect the Community</h4>
+                        <p>Please create fan content responsibly. Do not use Voice of the Forgotten to spread hate speech, harassment, bullying, discrimination, illegal content, explicit sexual content, or graphic violence intended to shock. Follow all Community Guidelines.</p>
+                        <h4>⭐ Featured Fan Creations</h4>
+                        <p>Light Web Official may feature outstanding fan creations on official platforms. Proper credit will always be given to the original fan creator. Creators retain ownership of their original contributions while allowing Light Web Official to showcase them.</p>
+                        <h4>📝 Disclaimer</h4>
+                        <p>Voice of the Forgotten and all official assets remain the intellectual property of <strong>Light</strong>. This Fan Content Policy does <strong>not</strong> transfer ownership or grant commercial rights. Light reserves the right to update this policy or request the removal of fan content that violates this policy or applicable laws.</p>
+                        <h4>📩 Contact</h4>
+                        <p>For commercial licensing, collaborations, permissions, or questions, please contact <strong>Light Web Official</strong> through the official website.</p>
+                        <hr>
+                        <p style="font-style:italic;">Thank you for helping Voice of the Forgotten grow. Happy Creating! ✨</p>
+                        <p>Created by <strong>Light</strong> under <strong>Light Web Official</strong> · © 2026 Light. All Rights Reserved.</p>
+                    `
                 },
-                privacy: {
-                    title: "Privacy Policy",
+                license: {
+                    title: "Proprietary License v1.0",
                     body: `
-                <p>Your privacy matters to us. <strong>Voice of the Forgotten (VOF)</strong> and <strong>Light Web Official</strong> are committed to protecting your personal information and providing a safe experience for all users.</p>
-                <p>By using this website, you agree to the collection and use of information in accordance with our Privacy Policy.</p>
-                <p>For detailed information about how we collect, use, store, and protect your data, please visit:</p>
-                <a href="https://sites.google.com/view/lightwebofficialstudio/privacy-policy?authuser=0" target="_blank" rel="noopener noreferrer" class="legal-btn">Read Privacy Policy →</a>
-              `
-                },
-                community: {
-                    title: "Community Guidelines",
-                    body: `
-                <p>Our community is built on creativity, respect, and collaboration. We encourage everyone to create, share, and discuss in a friendly and welcoming environment.</p>
-                <p>By participating in the <strong>Voice of the Forgotten (VOF)</strong> community, you agree to follow our Community Guidelines and treat all members with respect.</p>
-                <p>For the complete Community Guidelines, please visit:</p>
-                <a href="https://sites.google.com/view/lightwebofficialstudio/community-guidelines?authuser=0" target="_blank" rel="noopener noreferrer" class="legal-btn">View Community Guidelines →</a>
-              `
+                        <p><strong>Copyright © 2026 Light. All Rights Reserved.</strong></p>
+                        <p>This license applies to <strong>Voice of the Forgotten (VOF)</strong>, including its website, web application, novel, chapters, dialogue, characters, names, locations, lore, artwork, logos, graphics, animations, user interface, design elements, source code (unless otherwise stated), and all related materials created by <strong>Light</strong> under <strong>Light Web Official</strong>.</p>
+                        <p>By accessing, reading, downloading, or using any part of Voice of the Forgotten (VOF), you agree to comply with the terms of this License.</p>
+                        <hr>
+                        <h4>1. Ownership</h4>
+                        <p>All rights, title, and interest in Voice of the Forgotten (VOF) remain exclusively with <strong>Light</strong>. Nothing in this License transfers ownership of any intellectual property or grants any rights except those expressly stated below.</p>
+                        <h4>2. Permission to Access</h4>
+                        <p>You are granted a limited, personal, non-exclusive, non-transferable, and revocable permission to read the story through the official website or official applications, view publicly available content, share official links to the project, and participate in community discussions. This permission does not grant ownership of any content.</p>
+                        <h4>3. Copyright</h4>
+                        <p>Voice of the Forgotten (VOF) is protected by copyright and applicable intellectual property laws. Protection includes, but is not limited to: story, chapters, characters, dialogue, plot, world-building, artwork, logos, website design, user interface, graphics, animations, branding, documentation, and source code (unless separately licensed).</p>
+                        <h4>4. Restrictions</h4>
+                        <p>Unless you have prior written permission from Light, you may NOT:</p>
+                        <ul>
+                            <li>Copy or reproduce the novel or substantial portions of it</li>
+                            <li>Republish chapters on another website, application, or platform</li>
+                            <li>Sell, license, rent, or commercially exploit any VOF content</li>
+                            <li>Translate and publish the story</li>
+                            <li>Publish modified versions of the novel</li>
+                            <li>Remove copyright notices</li>
+                            <li>Claim ownership of any VOF content</li>
+                            <li>Use VOF content for AI training, datasets, machine learning, or automated content generation</li>
+                            <li>Circumvent or interfere with security measures implemented on the official platform</li>
+                            <li>Impersonate Light or Light Web Official</li>
+                        </ul>
+                        <h4>5. Fan Content</h4>
+                        <p>Fan-created works are governed separately by the <strong>Voice of the Forgotten Fan Content Policy</strong>. Nothing in this License limits the permissions expressly granted in that policy.</p>
+                        <h4>6. Commercial Use</h4>
+                        <p>Commercial use of any Voice of the Forgotten content is prohibited unless expressly authorized in writing by Light. Commercial use includes, but is not limited to: selling copies, merchandise, paid redistribution, paid translations, NFTs, advertising using VOF assets, and commercial licensing.</p>
+                        <h4>7. Fair Use</h4>
+                        <p>Nothing in this License is intended to limit rights granted under applicable copyright law, including fair use, fair dealing, criticism, commentary, news reporting, teaching, scholarship, or research.</p>
+                        <h4>8. Third-Party Content</h4>
+                        <p>Any third-party trademarks, assets, software, libraries, or services used within Voice of the Forgotten remain the property of their respective owners and are subject to their own licenses.</p>
+                        <h4>9. No Warranty</h4>
+                        <p>Voice of the Forgotten (VOF) is provided "as is" without warranties of any kind, to the maximum extent permitted by applicable law. Light makes no guarantees regarding uninterrupted availability or compatibility.</p>
+                        <h4>10. Limitation of Liability</h4>
+                        <p>To the maximum extent permitted by law, Light and Light Web Official shall not be liable for any indirect, incidental, consequential, or special damages arising from the use of Voice of the Forgotten.</p>
+                        <h4>11. Termination</h4>
+                        <p>Permission granted under this License automatically ends if you violate any of its terms. Upon termination, you must immediately stop using any content in violation of this License.</p>
+                        <h4>12. Changes to This License</h4>
+                        <p>Light reserves the right to update or modify this License at any time. Updated versions become effective when published through the official Voice of the Forgotten website or official Light Web Official platforms.</p>
+                        <h4>13. Governing Law</h4>
+                        <p>This License shall be governed by and interpreted in accordance with the laws of <strong>India</strong>. Any dispute arising under or relating to this License shall be subject to the exclusive jurisdiction of the competent courts of India.</p>
+                        <h4>14. Contact</h4>
+                        <p>For permissions, licensing requests, commercial partnerships, translations, or other copyright-related enquiries, please contact <strong>Light Web Official</strong> through the official website.</p>
+                        <hr>
+                        <p><strong>Summary (Non-Legal)</strong></p>
+                        <p><strong>✅ You May:</strong> Read Voice of the Forgotten, share the official website, join the community, enjoy the project, create fan content as permitted under the separate Fan Content Policy.</p>
+                        <p><strong>❌ You May Not:</strong> Upload the novel elsewhere, sell any VOF content, publish modified or translated versions, claim ownership, train AI models using VOF, remove copyright notices, or bypass website protections.</p>
+                        <hr>
+                        <p><strong>Voice of the Forgotten (VOF)</strong> · Created by <strong>Light</strong> under <strong>Light Web Official</strong> · © 2026 Light. All Rights Reserved.</p>
+                    `
                 }
             };
 
@@ -1026,10 +1131,10 @@
                     const data = legalData[key];
                     if (!data) return;
                     content.innerHTML = `
-                <h3>${data.title}</h3>
-                <hr>
-                ${data.body}
-              `;
+                        <h3>${data.title}</h3>
+                        <hr>
+                        ${data.body}
+                    `;
                     modal.classList.remove('hidden');
                 });
             });
