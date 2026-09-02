@@ -116,7 +116,7 @@
             z-index: 1;
             opacity: 0.05;
             mix-blend-mode: overlay;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' result='noise'/%3E%3CfeDisplacementMap in='SourceGraphic' in2='noise' scale='90' xChannelSelector='R' yChannelSelector='G'/%3E%3C/filter%3E%3C/svg%3E");
         }
 
         /* ============ HEADER ============ */
@@ -735,7 +735,7 @@
             <div class="footer-legal">
                 <p><strong>© 2026 Light. All Rights Reserved.</strong></p>
                 <p><strong>Voice of the Forgotten (VOF)</strong> is an original work by <strong>Light</strong> under <strong>Light Web Official</strong>.</p>
-                <p>All story content, characters, artwork, UI, logos, and other creative assets are protected by copyright and applicable intellectual property laws. Unauthorized copying, reproduction, redistribution, or commercial use is prohibited without prior written permission.</p>
+                <p>All story content, characters, artwork, UI, logos, and other creative assets are protected by copyright and applicable intellectual property laws. Unauthorized copying, reproduction, distribution, or modification is strictly prohibited.</p>
                 <p>
                     By using this website, you agree to our
                     <a href="https://sites.google.com/view/lightwebofficialstudio/terms-conditions?authuser=0" target="_blank" rel="noopener noreferrer" class="footer-link">Terms &amp; Conditions</a>,
@@ -750,7 +750,7 @@
             <div class="footer-join">
                 <h3>Join the VOF Realm</h3>
                 <p>Become a part of the <strong>Light Web Official</strong> community on Discord — connect with creators, readers, artists, developers, and storytellers from around the world.</p>
-                <p>Discover original projects, share your ideas, participate in discussions, and stay up to date with the latest releases from <strong>Voice of the Forgotten (VOF)</strong> and other creations.</p>
+                <p>Discover original projects, share your ideas, participate in discussions, and stay up to date with the latest releases from <strong>Voice of the Forgotten (VOF)</strong> and other creative works.</p>
                 <a href="https://discord.gg/hkkKYfQwVg" target="_blank" rel="noopener noreferrer" class="footer-join-btn">Join our Discord →</a>
                 <p class="footer-join-tagline">We'd love to have you with us. 💙</p>
             </div>
@@ -792,7 +792,7 @@
         const CONFIG = {
             bookTitle: "Voice of the Forgotten (VOF)",
             bookAuthor: "Light Shadow Knight",
-            driveFileId: "1b6KmNMHXgLz1QhLyGX5Oo2QpUDJEcbyQ",
+            driveFileId: "1WeWpxc0WisMTzwq08YyUDczuIM_JgH-V",
             instagramHandle: "light_shadowknight",
         };
 
@@ -998,148 +998,63 @@
                     setTimeout(() => {
                         copyBtn.textContent = "Copy message";
                         copyBtn.classList.remove("copied");
-                    }, 1800);
+                    }, 1500);
                 } catch (err) {
-                    console.warn("Clipboard copy failed:", err);
+                    console.error("Copy failed:", err);
                 }
             });
         }
 
         /* ---------- Legal modals ---------- */
         function setupLegalModals() {
-            const modal = document.getElementById("legalModal");
-            const closeBtn = document.getElementById("legalModalClose");
-            const content = document.getElementById("legalModalContent");
+            const legalModal = document.getElementById("legalModal");
+            const legalClose = document.getElementById("legalModalClose");
+            const legalContent = document.getElementById("legalModalContent");
 
-            closeBtn.addEventListener("click", () => modal.classList.add("hidden"));
-            modal.addEventListener("click", (e) => { if (e.target === modal) modal.classList.add("hidden"); });
+            legalClose.addEventListener("click", () => legalModal.classList.add("hidden"));
+            legalModal.addEventListener("click", (e) => { if (e.target === legalModal) legalModal.classList.add("hidden"); });
 
-            // Legal documents (full texts)
-            const legalData = {
-                fancontent: {
-                    title: "Fan Content Policy v1.0",
-                    body: `
-                        <p><strong>Last Updated:</strong> August 2026</p>
-                        <p>First of all, <strong>thank you</strong> for supporting <strong>Voice of the Forgotten (VOF)</strong>! ❤️</p>
-                        <p>Whether you're making memes, fan art, edits, AMVs, theories, or reviews, your creativity helps the community grow. This policy explains what fan creations are welcome and what isn't.</p>
-                        <p>This policy applies to <strong>Voice of the Forgotten (VOF)</strong>, its story, characters, artwork, world, logos, and related materials created by <strong>Light</strong> under <strong>Light Web Official</strong>.</p>
-                        <hr>
-                        <h4>❤️ Our Philosophy</h4>
-                        <p>Voice of the Forgotten exists because of storytelling and creativity. We encourage fans to express themselves, inspire others, and share their passion while respecting the original work and fellow community members.</p>
-                        <h4>✅ Fan Content You May Create</h4>
-                        <p>You are welcome to create and share <strong>non-commercial</strong> fan content, including:</p>
-                        <ul>
-                            <li><strong>Artwork</strong> — fan art, digital illustrations, traditional drawings, character concepts, wallpapers</li>
-                            <li><strong>Videos</strong> — AMVs, edits, motion edits, short videos, YouTube/TikTok/Instagram Reels, animations</li>
-                            <li><strong>Memes</strong> — memes, joke edits, reaction images, GIFs</li>
-                            <li><strong>Discussions</strong> — reviews, theories, character analysis, story discussions, reaction posts</li>
-                            <li><strong>Creative Projects</strong> — fan posters, fan websites (that do not republish the story), cosplay, moodboards, playlists, tribute videos</li>
-                        </ul>
-                        <h4>📢 Sharing Your Fan Content</h4>
-                        <p>You may upload your fan creations to platforms such as YouTube, Instagram, Facebook, X (Twitter), Reddit, Discord, TikTok, Pinterest, or personal websites. Whenever possible, please credit <strong>Voice of the Forgotten (VOF)</strong>, mention <strong>Light</strong> as the original creator, and link to the official website.</p>
-                        <h4>💰 Commercial Use</h4>
-                        <p>Fan content created under this policy is <strong>for non-commercial purposes only</strong>. You may <strong>not</strong> sell fan art, merchandise, paid translations, NFTs, or license VOF content to others. If you'd like to collaborate commercially, please contact Light Web Official first.</p>
-                        <h4>🚫 What You May NOT Do</h4>
-                        <ul>
-                            <li>Upload the novel or chapters elsewhere</li>
-                            <li>Recreate the official reading experience</li>
-                            <li>Publish modified versions of the story</li>
-                            <li>Translate and publish the novel</li>
-                            <li>Claim VOF as your own work</li>
-                            <li>Remove copyright notices</li>
-                            <li>Mislead others into believing your work is official</li>
-                            <li>Use official artwork as your own creation without permission</li>
-                            <li>Use VOF to promote hate, harassment, discrimination, illegal activity, or harmful content</li>
-                            <li>Use VOF content to train AI models or datasets without written permission</li>
-                        </ul>
-                        <h4>🤖 AI-Generated Fan Content</h4>
-                        <p>AI-generated fan creations are welcome. If your work uses AI, please clearly mention the AI tool or model used and that the work is fan-created.</p>
-                        <h4>🛡️ Respect the Community</h4>
-                        <p>Please create fan content responsibly. Do not use Voice of the Forgotten to spread hate speech, harassment, bullying, discrimination, illegal content, explicit sexual content, or graphic violence intended to shock. Follow all Community Guidelines.</p>
-                        <h4>⭐ Featured Fan Creations</h4>
-                        <p>Light Web Official may feature outstanding fan creations on official platforms. Proper credit will always be given to the original fan creator. Creators retain ownership of their original contributions while allowing Light Web Official to showcase them.</p>
-                        <h4>📝 Disclaimer</h4>
-                        <p>Voice of the Forgotten and all official assets remain the intellectual property of <strong>Light</strong>. This Fan Content Policy does <strong>not</strong> transfer ownership or grant commercial rights. Light reserves the right to update this policy or request the removal of fan content that violates this policy or applicable laws.</p>
-                        <h4>📩 Contact</h4>
-                        <p>For commercial licensing, collaborations, permissions, or questions, please contact <strong>Light Web Official</strong> through the official website.</p>
-                        <hr>
-                        <p style="font-style:italic;">Thank you for helping Voice of the Forgotten grow. Happy Creating! ✨</p>
-                        <p>Created by <strong>Light</strong> under <strong>Light Web Official</strong> · © 2026 Light. All Rights Reserved.</p>
-                    `
-                },
-                license: {
-                    title: "Proprietary License v1.0",
-                    body: `
-                        <p><strong>Copyright © 2026 Light. All Rights Reserved.</strong></p>
-                        <p>This license applies to <strong>Voice of the Forgotten (VOF)</strong>, including its website, web application, novel, chapters, dialogue, characters, names, locations, lore, artwork, logos, graphics, animations, user interface, design elements, source code (unless otherwise stated), and all related materials created by <strong>Light</strong> under <strong>Light Web Official</strong>.</p>
-                        <p>By accessing, reading, downloading, or using any part of Voice of the Forgotten (VOF), you agree to comply with the terms of this License.</p>
-                        <hr>
-                        <h4>1. Ownership</h4>
-                        <p>All rights, title, and interest in Voice of the Forgotten (VOF) remain exclusively with <strong>Light</strong>. Nothing in this License transfers ownership of any intellectual property or grants any rights except those expressly stated below.</p>
-                        <h4>2. Permission to Access</h4>
-                        <p>You are granted a limited, personal, non-exclusive, non-transferable, and revocable permission to read the story through the official website or official applications, view publicly available content, share official links to the project, and participate in community discussions. This permission does not grant ownership of any content.</p>
-                        <h4>3. Copyright</h4>
-                        <p>Voice of the Forgotten (VOF) is protected by copyright and applicable intellectual property laws. Protection includes, but is not limited to: story, chapters, characters, dialogue, plot, world-building, artwork, logos, website design, user interface, graphics, animations, branding, documentation, and source code (unless separately licensed).</p>
-                        <h4>4. Restrictions</h4>
-                        <p>Unless you have prior written permission from Light, you may NOT:</p>
-                        <ul>
-                            <li>Copy or reproduce the novel or substantial portions of it</li>
-                            <li>Republish chapters on another website, application, or platform</li>
-                            <li>Sell, license, rent, or commercially exploit any VOF content</li>
-                            <li>Translate and publish the story</li>
-                            <li>Publish modified versions of the novel</li>
-                            <li>Remove copyright notices</li>
-                            <li>Claim ownership of any VOF content</li>
-                            <li>Use VOF content for AI training, datasets, machine learning, or automated content generation</li>
-                            <li>Circumvent or interfere with security measures implemented on the official platform</li>
-                            <li>Impersonate Light or Light Web Official</li>
-                        </ul>
-                        <h4>5. Fan Content</h4>
-                        <p>Fan-created works are governed separately by the <strong>Voice of the Forgotten Fan Content Policy</strong>. Nothing in this License limits the permissions expressly granted in that policy.</p>
-                        <h4>6. Commercial Use</h4>
-                        <p>Commercial use of any Voice of the Forgotten content is prohibited unless expressly authorized in writing by Light. Commercial use includes, but is not limited to: selling copies, merchandise, paid redistribution, paid translations, NFTs, advertising using VOF assets, and commercial licensing.</p>
-                        <h4>7. Fair Use</h4>
-                        <p>Nothing in this License is intended to limit rights granted under applicable copyright law, including fair use, fair dealing, criticism, commentary, news reporting, teaching, scholarship, or research.</p>
-                        <h4>8. Third-Party Content</h4>
-                        <p>Any third-party trademarks, assets, software, libraries, or services used within Voice of the Forgotten remain the property of their respective owners and are subject to their own licenses.</p>
-                        <h4>9. No Warranty</h4>
-                        <p>Voice of the Forgotten (VOF) is provided "as is" without warranties of any kind, to the maximum extent permitted by applicable law. Light makes no guarantees regarding uninterrupted availability or compatibility.</p>
-                        <h4>10. Limitation of Liability</h4>
-                        <p>To the maximum extent permitted by law, Light and Light Web Official shall not be liable for any indirect, incidental, consequential, or special damages arising from the use of Voice of the Forgotten.</p>
-                        <h4>11. Termination</h4>
-                        <p>Permission granted under this License automatically ends if you violate any of its terms. Upon termination, you must immediately stop using any content in violation of this License.</p>
-                        <h4>12. Changes to This License</h4>
-                        <p>Light reserves the right to update or modify this License at any time. Updated versions become effective when published through the official Voice of the Forgotten website or official Light Web Official platforms.</p>
-                        <h4>13. Governing Law</h4>
-                        <p>This License shall be governed by and interpreted in accordance with the laws of <strong>India</strong>. Any dispute arising under or relating to this License shall be subject to the exclusive jurisdiction of the competent courts of India.</p>
-                        <h4>14. Contact</h4>
-                        <p>For permissions, licensing requests, commercial partnerships, translations, or other copyright-related enquiries, please contact <strong>Light Web Official</strong> through the official website.</p>
-                        <hr>
-                        <p><strong>Summary (Non-Legal)</strong></p>
-                        <p><strong>✅ You May:</strong> Read Voice of the Forgotten, share the official website, join the community, enjoy the project, create fan content as permitted under the separate Fan Content Policy.</p>
-                        <p><strong>❌ You May Not:</strong> Upload the novel elsewhere, sell any VOF content, publish modified or translated versions, claim ownership, train AI models using VOF, remove copyright notices, or bypass website protections.</p>
-                        <hr>
-                        <p><strong>Voice of the Forgotten (VOF)</strong> · Created by <strong>Light</strong> under <strong>Light Web Official</strong> · © 2026 Light. All Rights Reserved.</p>
-                    `
-                }
-            };
-
-            document.querySelectorAll('.footer-link[data-modal]').forEach(link => {
-                link.addEventListener('click', (e) => {
+            document.querySelectorAll(".footer-link[data-modal]").forEach((link) => {
+                link.addEventListener("click", (e) => {
                     e.preventDefault();
-                    const key = link.getAttribute('data-modal');
-                    const data = legalData[key];
-                    if (!data) return;
-                    content.innerHTML = `
-                        <h3>${data.title}</h3>
-                        <hr>
-                        ${data.body}
-                    `;
-                    modal.classList.remove('hidden');
+                    const modalType = link.dataset.modal;
+                    displayLegalContent(modalType, legalContent);
+                    legalModal.classList.remove("hidden");
                 });
             });
         }
-    </script>
 
+        function displayLegalContent(type, container) {
+            const content = {
+                fancontent: `
+                    <h3>Fan Content Policy</h3>
+                    <p>We love fan creations! If you create fan art, fan fiction, or other derivative works based on <strong>Voice of the Forgotten</strong>, here's what we ask:</p>
+                    <ul>
+                        <li>Give credit to <strong>Light</strong> as the original author and creator.</li>
+                        <li>Make it clear that your work is unofficial fan-made content, not endorsed by Light Web Official.</li>
+                        <li>Don't profit from or commercialize fan content without explicit permission.</li>
+                        <li>Respect the story and characters — avoid content that contradicts the spirit of VOF.</li>
+                    </ul>
+                    <p>Questions or want to collaborate? Reach out to us on <a href="https://discord.gg/hkkKYfQwVg" target="_blank" rel="noopener noreferrer" class="footer-link">Discord</a>.</p>
+                `,
+                license: `
+                    <h3>License & Attribution</h3>
+                    <p><strong>Voice of the Forgotten (VOF)</strong> is created by <strong>Light</strong> and published under <strong>Light Web Official</strong>.</p>
+                    <h4>Creative Commons Attribution (CC BY 4.0)</h4>
+                    <p>This work is licensed under the <strong>Creative Commons Attribution 4.0 International License</strong>. You are free to:</p>
+                    <ul>
+                        <li><strong>Share</strong> — copy and redistribute the material in any medium or format</li>
+                        <li><strong>Adapt</strong> — remix, transform, and build upon the material for any purpose, even commercially</li>
+                    </ul>
+                    <p><strong>Under the following terms:</strong></p>
+                    <ul>
+                        <li><strong>Attribution</strong> — you must give appropriate credit, provide a link to the license, and indicate if changes were made</li>
+                    </ul>
+                    <p>For more details, visit <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer" class="footer-link">creativecommons.org</a>.</p>
+                `
+            };
+            container.innerHTML = content[type] || "<p>Content not found.</p>";
+        }
+    </script>
 </body>
 </html>
