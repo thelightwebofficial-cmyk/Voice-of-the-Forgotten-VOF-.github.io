@@ -1,438 +1,192 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="en" data-theme="light">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Voice of the Forgotten — Field Copy</title>
-<meta name="robots" content="noindex, nofollow" />
-<link rel="icon" href="favicon.ico" type="image/x-icon" />
-<link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#221e19">
+<meta name="color-scheme" content="light dark">
+<title>Voice of the Forgotten — Before War | Light Shadow Knight</title>
+<meta name="description" content="The official field copy of Voice of the Forgotten: Before War — Volume I, an original work by Light Shadow Knight.">
+<meta name="author" content="Light Shadow Knight">
+<meta name="robots" content="noindex, nofollow">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Voice of the Forgotten — Before War">
+<meta property="og:description" content="The official field copy of Voice of the Forgotten: Before War — Volume I, by Light Shadow Knight.">
+<meta property="og:url" content="https://thelightwebofficial-cmyk.github.io/Voice-of-the-Forgotten-VOF-.github.io/">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="favicon.ico" type="image/x-icon">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,600;1,500;1,600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&family=Spectral:ital,wght@0,400;0,600;1,500;1,600&display=swap" rel="stylesheet">
 <style>
-:root{
-  --bone:#ECE4D3; --bone-2:#E1D6BC; --ink:#221E19; --ink-soft:#5C5342;
-  --oxblood:#7A2323; --olive:#4B5340; --line:#C9BBA0; --redact:#1B1712;
-  --serif-display:'Spectral',Georgia,serif; --serif-body:'Source Serif 4',Georgia,serif;
-  --mono:'Courier Prime',ui-monospace,monospace;
-}
-@media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){
-    --bone:#1C1812; --bone-2:#241F17; --ink:#ECE4D3; --ink-soft:#B9AD93;
-    --oxblood:#C25A5A; --olive:#8B9977; --line:#453C2C; --redact:#000;
-  }
-}
-:root[data-theme="dark"]{
-  --bone:#1C1812; --bone-2:#241F17; --ink:#ECE4D3; --ink-soft:#B9AD93;
-  --oxblood:#C25A5A; --olive:#8B9977; --line:#453C2C; --redact:#000;
-}
-@media (prefers-reduced-motion: reduce){ *{ animation-duration:.001ms !important; transition-duration:.001ms !important; } }
-*{ box-sizing:border-box; }
-html,body{ margin:0; padding:0; }
-body{
-  background:var(--bone); color:var(--ink); font-family:var(--serif-body);
-  line-height:1.6; min-height:100vh; -webkit-font-smoothing:antialiased;
-}
-html,body{ -webkit-user-select:none; -moz-user-select:none; user-select:none; -webkit-touch-callout:none; }
-img,svg{ -webkit-user-drag:none; pointer-events:none; }
-button,a,input,textarea,.modal{ pointer-events:auto; }
-@media print{
-  body *{ display:none !important; }
-  body::after{ content:"This copy can't be printed. Read it at the link instead."; display:block !important; padding:4em; font-family:sans-serif; }
-}
-
-/* ---------- layout shell ---------- */
-.wrap{ max-width:760px; margin:0 auto; padding:0 20px; }
-
-/* ---------- header: case-file strip ---------- */
-.file-strip{
-  border-bottom:1px solid var(--line); padding:40px 0 22px;
-}
-.file-strip .row{ display:flex; align-items:flex-start; gap:18px; }
-.stamp{
-  flex:0 0 auto; width:64px; height:64px; border-radius:50%;
-  border:2px solid var(--oxblood); color:var(--oxblood);
-  display:flex; align-items:center; justify-content:center; text-align:center;
-  font-family:var(--mono); font-size:10px; font-weight:700; letter-spacing:.03em;
-  transform:rotate(-8deg); line-height:1.15; opacity:.85;
-}
-.file-meta{ flex:1; min-width:0; }
-.file-meta .no{ font-family:var(--mono); font-size:12px; color:var(--ink-soft); margin:0 0 6px; }
-.file-meta h1{
-  font-family:var(--serif-display); font-style:italic; font-weight:600;
-  font-size:clamp(26px,5vw,38px); margin:0; color:var(--ink);
-}
-.file-meta p{ margin:6px 0 0; color:var(--ink-soft); font-size:15px; }
-
-/* ---------- reader ---------- */
-.reader-wrap{ padding:36px 0 8px; perspective:1400px; }
-.reader-note{
-  font-family:var(--mono); font-size:11px; color:var(--oxblood);
-  letter-spacing:.04em; margin:0 0 12px;
-}
-.dossier{
-  position:relative; border:1px solid var(--line); background:var(--bone-2);
-  border-radius:2px; padding:14px 14px 18px;
-  box-shadow:0 30px 50px -30px rgba(0,0,0,.4), 0 2px 0 var(--line);
-  transform-style:preserve-3d;
-  transform-origin:top center;
-  animation:folderOpen .85s cubic-bezier(.2,.8,.2,1) both;
-  transition:box-shadow .25s ease;
-  will-change:transform;
-}
-@keyframes folderOpen{
-  from{ opacity:0; transform:rotateX(-72deg) translateY(10px) translateZ(-30px); }
-  to{ opacity:1; transform:rotateX(0deg) translateY(0) translateZ(0); }
-}
-.reader-frame{ transform-style:preserve-3d; }
-.dossier::before{
-  content:""; position:absolute; top:-1px; left:26px; width:120px; height:14px;
-  background:var(--bone-2); border:1px solid var(--line); border-bottom:none;
-  border-radius:3px 3px 0 0;
-}
-.reader-frame{
-  position:relative; width:100%; aspect-ratio:8.5/11; overflow:hidden;
-  border:1px solid var(--line); background:var(--bone);
-  transition:filter .18s ease;
-}
-.reader-frame.blurred{ filter:blur(16px) brightness(.85); }
-.reader-frame iframe{ width:100%; height:100%; border:0; display:block; background:var(--bone); }
-.reader-loading{
-  position:absolute; inset:0; display:flex; flex-direction:column; align-items:center;
-  justify-content:center; gap:10px; background:var(--bone); color:var(--ink-soft);
-  font-family:var(--mono); font-size:12px; z-index:3; transition:opacity .3s ease;
-}
-.reader-loading.hidden{ opacity:0; pointer-events:none; }
-.spinner{ width:22px; height:22px; border-radius:50%; border:2px solid var(--line); border-top-color:var(--oxblood); animation:spin .9s linear infinite; }
-@keyframes spin{ to{ transform:rotate(360deg); } }
-.watermark{
-  position:absolute; inset:0; z-index:2; pointer-events:none; display:flex; flex-wrap:wrap;
-  align-content:space-between; opacity:.09; transform:rotate(-20deg) scale(1.25);
-  font-family:var(--mono); font-size:11px; color:var(--ink);
-}
-.watermark span{ width:33%; padding:9px; white-space:nowrap; }
-.denied{
-  position:absolute; inset:0; z-index:5; display:flex; align-items:center; justify-content:center;
-  font-family:var(--serif-display); font-style:italic; font-weight:600; font-size:26px;
-  color:var(--oxblood); background:rgba(27,23,18,0); opacity:0; pointer-events:none;
-  border:3px solid var(--oxblood); transform:rotate(-6deg) scale(1.1);
-  transition:opacity .15s ease;
-}
-.denied.show{ opacity:.92; background:rgba(236,228,211,.55); }
-.reader-hint{ margin:14px 2px 0; font-size:13px; color:var(--ink-soft); }
-
-.devtools-warning{
-  position:fixed; inset:0; z-index:999; background:rgba(20,17,13,.94);
-  display:flex; align-items:center; justify-content:center; text-align:center; padding:20px;
-  color:var(--bone); font-family:var(--serif-display); font-size:20px; font-style:italic;
-}
-.devtools-warning .small{ font-family:var(--serif-body); font-style:normal; font-size:13px; color:var(--bone-2); margin-top:8px; }
-.hidden{ display:none !important; }
-
-/* ---------- dispatch actions ---------- */
-.dispatch-band{ padding:38px 0 6px; display:flex; gap:14px; flex-wrap:wrap; perspective:900px; }
-.tab-btn{
-  flex:1; min-width:220px; display:flex; align-items:center; gap:12px;
-  background:var(--bone-2); border:1px solid var(--line); border-radius:2px;
-  padding:16px 18px; text-decoration:none; color:var(--ink); cursor:pointer;
-  font-family:var(--serif-body); font-size:14px;
-  transform-style:preserve-3d;
-  box-shadow:0 1px 0 var(--line), 0 10px 18px -14px rgba(0,0,0,.3);
-  transition:border-color .18s ease, transform .18s cubic-bezier(.2,.8,.2,1), box-shadow .18s ease;
-}
-.tab-btn:hover{
-  border-color:var(--oxblood);
-  transform:translateY(-4px) translateZ(10px) rotateX(3deg);
-  box-shadow:0 1px 0 var(--line), 0 20px 26px -16px rgba(0,0,0,.4);
-}
-.tab-btn:active{
-  transform:translateY(1px) translateZ(0) scale(.98);
-  box-shadow:0 1px 0 var(--line), 0 4px 8px -6px rgba(0,0,0,.35);
-}
-.tab-btn .mark{
-  flex:0 0 auto; width:30px; height:30px; border-radius:50%; border:1.5px solid var(--oxblood);
-  display:flex; align-items:center; justify-content:center; color:var(--oxblood); font-size:14px;
-}
-.tab-btn .label b{ display:block; font-family:var(--mono); font-size:10px; letter-spacing:.05em; color:var(--ink-soft); margin-bottom:3px; font-weight:400; }
-.tab-btn .label span{ font-style:italic; font-size:15px; }
-
-/* ---------- hire card ---------- */
-.hire-wrap{ padding:34px 0 4px; perspective:1000px; }
-.hire-card{
-  position:relative; border:1px dashed var(--line); background:var(--bone-2);
-  border-radius:2px; padding:22px 24px; transform-style:preserve-3d;
-  transform:rotate(-1.2deg); box-shadow:0 16px 30px -22px rgba(0,0,0,.35);
-  transition:transform .3s cubic-bezier(.2,.8,.2,1), box-shadow .3s ease;
-}
-.hire-card:hover{
-  transform:rotate(0deg) translateZ(14px);
-  box-shadow:0 26px 44px -24px rgba(0,0,0,.42);
-}
-.hire-card .pin{
-  position:absolute; top:-9px; left:22px; width:16px; height:16px; border-radius:50%;
-  background:var(--oxblood); box-shadow:0 3px 5px rgba(0,0,0,.35);
-}
-.hire-card h4{
-  font-family:var(--serif-display); font-style:italic; font-weight:600;
-  font-size:18px; margin:0 0 8px; color:var(--ink);
-}
-.hire-card p{ margin:0 0 14px; font-size:14px; color:var(--ink-soft); max-width:52ch; }
-.hire-card .price{ color:var(--oxblood); font-weight:600; font-style:normal; }
-.hire-btn{
-  display:inline-flex; align-items:center; gap:8px; background:var(--oxblood); color:var(--bone);
-  border:none; text-decoration:none; font-family:var(--serif-body); font-size:13.5px;
-  padding:10px 18px; border-radius:2px; transition:transform .15s ease, box-shadow .15s ease;
-}
-.hire-btn:hover{ transform:translateY(-2px) translateZ(6px); box-shadow:0 10px 18px -10px rgba(0,0,0,.4); }
-
-/* ---------- footer ---------- */
-.foot{ border-top:1px solid var(--line); margin-top:46px; padding:26px 0 44px; }
-.foot p{ margin:0 0 8px; font-size:12.5px; color:var(--ink-soft); line-height:1.7; }
-.foot a{ color:var(--oxblood); text-decoration:none; border-bottom:1px dotted var(--oxblood); }
-.foot a:hover{ color:var(--ink); border-bottom-color:var(--ink); }
-
-/* ---------- modal ---------- */
-.modal-backdrop{
-  position:fixed; inset:0; z-index:1000; background:rgba(20,17,13,.65);
-  display:flex; align-items:center; justify-content:center; padding:20px;
-  perspective:1200px;
-}
-.modal{
-  width:min(480px,100%); background:var(--bone); border:1px solid var(--line);
-  border-radius:2px; padding:26px; position:relative;
-  animation:cardFlip .35s cubic-bezier(.2,.8,.2,1) both;
-  box-shadow:0 30px 60px -30px rgba(0,0,0,.5);
-}
-@keyframes cardFlip{
-  from{ opacity:0; transform:rotateX(-18deg) translateY(14px) scale(.94); }
-  to{ opacity:1; transform:rotateX(0) translateY(0) scale(1); }
-}
-.modal h3{ font-family:var(--serif-display); font-style:italic; font-weight:600; margin:0 0 10px; font-size:20px; }
-.modal p{ font-size:14px; color:var(--ink-soft); margin:0 0 14px; }
-.msg-box{ background:var(--bone-2); border:1px solid var(--line); border-radius:2px; padding:12px; margin-bottom:14px; }
-.msg-box p{ color:var(--ink); margin:0 0 10px; font-size:13.5px; }
-.copy-btn,.send-btn{
-  font-family:var(--mono); font-size:12px; border-radius:2px; cursor:pointer; padding:9px 14px;
-}
-.copy-btn{ background:var(--bone); border:1px solid var(--line); color:var(--ink); }
-.copy-btn.copied{ border-color:var(--oxblood); color:var(--oxblood); }
-.send-btn{
-  display:block; width:100%; text-align:center; background:var(--oxblood); color:var(--bone);
-  border:none; text-decoration:none; padding:12px; margin-top:4px;
-}
-.modal-close{ position:absolute; top:12px; right:14px; background:none; border:none; font-size:20px; color:var(--ink-soft); cursor:pointer; }
+:root{--bone:#ece4d3;--bone2:#e1d6bc;--ink:#221e19;--soft:#625947;--red:#7a2323;--olive:#4b5340;--line:#c9bba0;--shadow:rgba(34,30,25,.16);--display:'Spectral',Georgia,serif;--body:'Source Serif 4',Georgia,serif;--mono:'Courier Prime',ui-monospace,monospace}
+:root[data-theme=dark]{--bone:#181511;--bone2:#231e17;--ink:#eee5d2;--soft:#b8ad98;--red:#d36b6b;--olive:#9aa887;--line:#453c2d;--shadow:rgba(0,0,0,.42)}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;min-height:100vh;background:radial-gradient(circle at 50% -10%,rgba(122,35,35,.06),transparent 38%),var(--bone);color:var(--ink);font-family:var(--body);line-height:1.65;-webkit-font-smoothing:antialiased}
+button,a{font:inherit}
+button{cursor:pointer}
+a{color:inherit}
+.skip{position:fixed;left:12px;top:12px;z-index:1000;padding:9px 13px;background:var(--red);color:var(--bone);transform:translateY(-150%);transition:.2s;text-decoration:none;font-family:var(--mono);font-size:12px}
+.skip:focus{transform:none}
+.wrap{width:min(900px,calc(100% - 32px));margin:auto}
+.topbar{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid var(--line);font-family:var(--mono);font-size:11px;color:var(--soft);letter-spacing:.04em}
+.topbar .status{display:flex;gap:9px;align-items:center}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--olive);box-shadow:0 0 0 3px color-mix(in srgb,var(--olive) 16%,transparent)}
+.theme{border:1px solid var(--line);background:transparent;color:var(--soft);padding:7px 10px;border-radius:2px;font-family:var(--mono);font-size:11px}
+header{padding:48px 0 28px;border-bottom:1px solid var(--line)}
+.header-grid{display:grid;grid-template-columns:auto 1fr;gap:20px;align-items:start}
+.stamp{width:72px;height:72px;border:2px solid var(--red);border-radius:50%;display:grid;place-items:center;text-align:center;color:var(--red);font:700 10px/1.15 var(--mono);transform:rotate(-7deg)}
+.kicker{margin:0 0 7px;font:700 11px var(--mono);letter-spacing:.07em;color:var(--soft)}
+h1{margin:0;font:600 italic clamp(34px,7vw,58px)/1 var(--display);letter-spacing:-.02em}
+.subtitle{margin:12px 0 0;color:var(--soft);font-size:17px}
+.hero-note{margin:25px 0 0;padding:13px 15px;border-left:3px solid var(--red);background:color-mix(in srgb,var(--bone2) 70%,transparent);font-size:14px;color:var(--soft)}
+main{padding:38px 0 0}
+.section-label{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:12px}
+.section-label span:first-child{font:700 11px var(--mono);letter-spacing:.06em;color:var(--red)}
+.section-label span:last-child{font:11px var(--mono);color:var(--soft)}
+.reader{position:relative;background:var(--bone2);border:1px solid var(--line);padding:14px;box-shadow:0 24px 48px -34px var(--shadow)}
+.reader:before{content:"";position:absolute;left:26px;top:-1px;width:130px;height:13px;border:1px solid var(--line);border-bottom:0;background:var(--bone2);border-radius:3px 3px 0 0}
+.frame{position:relative;height:min(82vh,920px);min-height:560px;background:var(--bone);border:1px solid var(--line);overflow:hidden}
+iframe{display:block;width:100%;height:100%;border:0;background:var(--bone)}
+.loading{position:absolute;inset:0;z-index:3;display:grid;place-items:center;background:var(--bone);font:12px var(--mono);color:var(--soft);transition:opacity .3s}
+.loading.hide{opacity:0;pointer-events:none}
+.loader{width:24px;height:24px;border:2px solid var(--line);border-top-color:var(--red);border-radius:50%;animation:spin .8s linear infinite;margin:auto auto 9px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.wm{position:absolute;inset:0;pointer-events:none;z-index:4;display:grid;grid-template-columns:repeat(3,1fr);grid-auto-rows:1fr;align-items:center;transform:rotate(-19deg) scale(1.25);opacity:.055;color:var(--ink);font:11px var(--mono)}
+.wm span{padding:20px;white-space:nowrap}
+.reader-footer{display:flex;justify-content:space-between;gap:16px;margin-top:12px;color:var(--soft);font:11px var(--mono)}
+.reader-footer strong{color:var(--red);font-weight:400}
+.actions{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:30px}
+.action{min-height:86px;display:flex;align-items:center;gap:13px;padding:14px 16px;border:1px solid var(--line);background:var(--bone2);text-decoration:none;transition:.2s;box-shadow:0 1px 0 var(--line)}
+.action:hover,.action:focus-visible{border-color:var(--red);transform:translateY(-3px);outline:none}
+.icon{width:34px;height:34px;border:1px solid var(--red);border-radius:50%;display:grid;place-items:center;color:var(--red);flex:none}
+.action b{display:block;font:700 10px var(--mono);letter-spacing:.05em;color:var(--soft)}
+.action span{display:block;margin-top:3px;font-size:15px;font-style:italic}
+.note{margin-top:30px;padding:20px 22px;border:1px dashed var(--line);background:var(--bone2);transform:rotate(-.5deg)}
+.note h2{margin:0 0 7px;font:600 italic 20px var(--display)}
+.note p{margin:0;color:var(--soft);font-size:14px}
+.note .price{color:var(--red);font-weight:600}
+.footer{margin:46px 0 0;padding:26px 0 44px;border-top:1px solid var(--line);color:var(--soft);font-size:12px}
+.footer p{margin:0 0 8px}
+.footer a{color:var(--red);text-decoration:none;border-bottom:1px dotted var(--red)}
+.modal-backdrop{position:fixed;inset:0;z-index:20;display:grid;place-items:center;padding:18px;background:rgba(20,17,13,.7)}
+.modal{width:min(480px,100%);background:var(--bone);border:1px solid var(--line);padding:26px;box-shadow:0 30px 70px -35px #000;position:relative}
+.modal h2{margin:0 0 8px;font:600 italic 22px var(--display)}
+.modal p{color:var(--soft);font-size:14px}
+.close{position:absolute;right:10px;top:8px;border:0;background:transparent;color:var(--soft);font-size:25px}
+.msg{padding:12px;border:1px solid var(--line);background:var(--bone2);font-size:13px}
+.copy,.send{display:block;width:100%;margin-top:10px;padding:11px;border:1px solid var(--line);background:var(--bone2);color:var(--ink);text-align:center;text-decoration:none;font:12px var(--mono)}
+.send{background:var(--red);border-color:var(--red);color:var(--bone)}
+.hidden{display:none!important}
+:focus-visible{outline:2px solid var(--red);outline-offset:3px}
+@media(max-width:700px){.wrap{width:min(100% - 22px,900px)}.topbar{font-size:10px}.header-grid{grid-template-columns:56px 1fr;gap:14px}.stamp{width:56px;height:56px;font-size:8px}header{padding-top:30px}h1{font-size:38px}.subtitle{font-size:15px}.frame{height:72vh;min-height:470px}.actions{grid-template-columns:1fr}.reader-footer{display:block}.reader-footer span{display:block;margin-top:5px}.note{transform:none}}
+@media(max-width:430px){h1{font-size:33px}.hero-note{font-size:13px}.frame{height:70vh;min-height:430px}.wm{grid-template-columns:repeat(2,1fr)}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{animation-duration:.001ms!important;transition-duration:.001ms!important}}
 </style>
 </head>
 <body>
-
+<a class="skip" href="#reader">Skip to field copy</a>
 <div class="wrap">
+  <nav class="topbar" aria-label="Archive status">
+    <span>LIGHT WEB OFFICIAL / V.O.F. ARCHIVE</span>
+    <span class="status"><span class="dot" aria-hidden="true"></span> FIELD COPY ONLINE <button class="theme" id="themeBtn" type="button" aria-label="Switch colour theme">DARK MODE</button></span>
+  </nav>
 
-  <header class="file-strip">
-    <div class="row">
-      <div class="stamp">V.O.F.<br>FILE</div>
-      <div class="file-meta">
-        <p class="no">CASE FILE №1 · BEFORE WAR</p>
+  <header>
+    <div class="header-grid">
+      <div class="stamp" aria-hidden="true">V.O.F.<br>FILE</div>
+      <div>
+        <p class="kicker">CASE FILE №1 · BEFORE WAR</p>
         <h1>Voice of the Forgotten</h1>
-        <p>Volume I, by Light Shadow Knight</p>
+        <p class="subtitle">Volume I · by Light Shadow Knight</p>
       </div>
     </div>
+    <p class="hero-note">This is the official field copy. Read at your own pace. The archive is read-only and protected by a light deterrent layer; no webpage can prevent screenshots or recording.</p>
   </header>
 
-  <main class="reader-wrap">
-    <p class="reader-note">READ-ONLY COPY — NOT FOR REPRODUCTION</p>
-    <div class="dossier">
-      <div class="reader-frame" id="readerFrame">
-        <div class="reader-loading" id="readerLoading">
-          <div class="spinner"></div>
-          <p>Retrieving file…</p>
-        </div>
-        <iframe id="bookFrame" title="Book viewer" loading="lazy"></iframe>
-        <div class="watermark" id="watermark" aria-hidden="true"></div>
-        <div class="denied" id="denied">DENIED</div>
+  <main id="reader">
+    <div class="section-label"><span>FIELD COPY / READ-ONLY</span><span>ARCHIVE STATUS: ACTIVE</span></div>
+    <section class="reader" aria-label="Voice of the Forgotten reader">
+      <div class="frame">
+        <div class="loading" id="loading"><div><div class="loader" aria-hidden="true"></div>Retrieving field copy…</div></div>
+        <iframe id="bookFrame" title="Voice of the Forgotten — Volume I field copy" loading="eager" allowfullscreen></iframe>
+        <div class="wm" aria-hidden="true" id="watermark"></div>
       </div>
-    </div>
-    <p class="reader-hint">Copying, pasting, printing, right-click, and dev-tools shortcuts are blocked on this page. Two honest limits worth knowing: no website can stop a screenshot or screen recording — that happens at the OS level, outside any page's control — and the real backstop against copying <em>inside</em> the embedded viewer is the "disable download, print &amp; copy for viewers" toggle on the Drive file itself, not this page's script. Treat all of this as a deterrent, not a lock.</p>
+      <div class="reader-footer">
+        <span><strong>VIEW ONLY</strong> · Please use the official link when sharing.</span>
+        <span>CASE FILE №1 · BEFORE WAR</span>
+      </div>
+    </section>
+
+    <section class="actions" aria-label="Archive actions">
+      <a class="action" href="https://www.webnovel.com/book/34523686908733405" target="_blank" rel="noopener noreferrer">
+        <span class="icon" aria-hidden="true">✎</span><span><b>LEAVE WORD</b><span>Comment on Webnovel</span></span>
+      </a>
+      <button class="action" id="supportBtn" type="button">
+        <span class="icon" aria-hidden="true">✦</span><span><b>SEND SUPPORT</b><span>Message the author</span></span>
+      </button>
+      <a class="action" href="LICENSE.md"><span class="icon" aria-hidden="true">§</span><span><b>USAGE TERMS</b><span>License & permissions</span></span></a>
+    </section>
+
+    <section class="note">
+      <h2>Note from the desk</h2>
+      <p>Want a site built with the same attention to identity, design and security? Limited custom builds are available, starting from <span class="price">₹20,000</span>.</p>
+      <p style="margin-top:10px"><a href="https://www.instagram.com/light_shadowknight/" target="_blank" rel="noopener noreferrer" style="color:var(--red)">Message Light on Instagram →</a></p>
+    </section>
   </main>
 
-  <div class="devtools-warning hidden" id="devtoolsWarning">
-    <div>
-      <p>Reading is paused while developer tools are open.</p>
-      <p class="small">Close them to keep going.</p>
-    </div>
-  </div>
-
-  <section class="dispatch-band">
-    <a class="tab-btn" id="commentTab" href="https://www.webnovel.com/book/34523686908733405" target="_blank" rel="noopener noreferrer">
-      <span class="mark">✎</span>
-      <span class="label"><b>LEAVE WORD</b><span>Comment on Webnovel</span></span>
-    </a>
-    <button class="tab-btn" id="supportTab" type="button">
-      <span class="mark">✦</span>
-      <span class="label"><b>SEND SUPPORT</b><span>Chat / donate on Instagram</span></span>
-    </button>
-    <a class="tab-btn" id="licenseTab" href="LICENSE.md" target="_blank" rel="noopener noreferrer">
-      <span class="mark">§</span>
-      <span class="label"><b>USAGE TERMS</b><span>License</span></span>
-    </a>
-  </section>
-
-  <section class="hire-wrap">
-    <div class="hire-card">
-      <span class="pin"></span>
-      <h4>Note from the desk</h4>
-      <p>If you want a site like this for your own work — real thought put into the design and the security, not a template — I take on a limited number of builds. Starting from just <span class="price">₹20,000</span>.</p>
-      <a class="hire-btn" href="https://www.instagram.com/light_shadowknight/" target="_blank" rel="noopener noreferrer">Message me on Instagram →</a>
-    </div>
-  </section>
-
-  <footer class="foot">
-    <p>© 2026 Light. Voice of the Forgotten is an original work — please don't redistribute this copy.</p>
-    <p>Comments open on <a href="https://www.webnovel.com/book/34523686908733405" target="_blank" rel="noopener noreferrer">Webnovel</a>. For anything else, reach out on <a href="https://www.instagram.com/light_shadowknight/" target="_blank" rel="noopener noreferrer">Instagram</a>.</p>
-    <p><a href="LICENSE.md" target="_blank" rel="noopener noreferrer">License</a> · <a href="Terms%20%26%20Conditions.md" target="_blank" rel="noopener noreferrer">Terms &amp; Conditions</a> · <a href="FAN_CONTENT_POLICY.md" target="_blank" rel="noopener noreferrer">Fan Content Policy</a></p>
+  <footer class="footer">
+    <p>© 2026 Light. Voice of the Forgotten is an original work. Please do not redistribute this copy.</p>
+    <p>Comments: <a href="https://www.webnovel.com/book/34523686908733405" target="_blank" rel="noopener noreferrer">Webnovel</a> · Contact: <a href="https://www.instagram.com/light_shadowknight/" target="_blank" rel="noopener noreferrer">Instagram</a></p>
+    <p><a href="LICENSE.md">License</a> · <a href="Terms%20%26%20Conditions.md">Terms &amp; Conditions</a> · <a href="FAN_CONTENT_POLICY.md">Fan Content Policy</a> · <a href="PRIVACY.md">Privacy</a> · <a href="COMMUNITY_GUIDELINES.md">Community Guidelines</a></p>
   </footer>
-
 </div>
 
 <div class="modal-backdrop hidden" id="supportModal">
-  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="supportTitle">
-    <button class="modal-close" id="supportClose" aria-label="Close">&times;</button>
-    <h3 id="supportTitle">Send support on Instagram</h3>
-    <p>Instagram won't let a website pre-fill a DM, so here's a line ready to paste once the chat opens.</p>
-    <div class="msg-box">
-      <p id="msgText">Hey — just read Voice of the Forgotten and wanted to send some support 🙌</p>
-      <button class="copy-btn" id="copyMsgBtn">Copy message</button>
-    </div>
-    <a class="send-btn" id="openIg" href="https://ig.me/m/light_shadowknight" target="_blank" rel="noopener noreferrer">Open Instagram DM</a>
-  </div>
+  <section class="modal" role="dialog" aria-modal="true" aria-labelledby="supportTitle">
+    <button class="close" id="closeModal" type="button" aria-label="Close">×</button>
+    <h2 id="supportTitle">Send support</h2>
+    <p>Open the author's Instagram DM with a short message ready to copy.</p>
+    <div class="msg" id="msg">Hey — just read Voice of the Forgotten and wanted to send some support 🙌</div>
+    <button class="copy" id="copyBtn" type="button">Copy message</button>
+    <a class="send" href="https://ig.me/m/light_shadowknight" target="_blank" rel="noopener noreferrer">Open Instagram DM →</a>
+  </section>
 </div>
 
 <script>
-const DOC_ID = "1ndNJ4M3zpla2uWomVLRa9b7_h_EZj1k0";
+const DOC_ID="1ndNJ4M3zpla2uWomVLRa9b7_h_EZj1k0";
+const root=document.documentElement;
+const themeBtn=document.getElementById("themeBtn");
+const saved=localStorage.getItem("vof-theme");
+if(saved) root.dataset.theme=saved;
+function syncTheme(){themeBtn.textContent=root.dataset.theme==="dark"?"LIGHT MODE":"DARK MODE";themeBtn.setAttribute("aria-label",root.dataset.theme==="dark"?"Switch to light mode":"Switch to dark mode")}
+syncTheme();
+themeBtn.addEventListener("click",()=>{root.dataset.theme=root.dataset.theme==="dark"?"light":"dark";localStorage.setItem("vof-theme",root.dataset.theme);syncTheme()});
 
-document.addEventListener("DOMContentLoaded", () => {
-  setupReader();
-  setupWatermark();
-  setupProtection();
-  setupSupportModal();
-  setupDossierTilt();
-});
+const frame=document.getElementById("bookFrame");
+const loading=document.getElementById("loading");
+frame.src="https://docs.google.com/document/d/"+DOC_ID+"/preview";
+frame.addEventListener("load",()=>loading.classList.add("hide"));
+setTimeout(()=>loading.classList.add("hide"),6000);
 
-function setupDossierTilt(){
-  const dossier = document.querySelector(".dossier");
-  if (!dossier || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-  const maxTilt = 4;
-  dossier.addEventListener("mousemove", e => {
-    const r = dossier.getBoundingClientRect();
-    const px = (e.clientX - r.left) / r.width - 0.5;
-    const py = (e.clientY - r.top) / r.height - 0.5;
-    dossier.style.transform = `rotateX(${(-py * maxTilt).toFixed(2)}deg) rotateY(${(px * maxTilt).toFixed(2)}deg) translateZ(6px)`;
-  });
-  dossier.addEventListener("mouseleave", () => { dossier.style.transform = ""; });
-}
+const wm=document.getElementById("watermark");
+wm.innerHTML=Array.from({length:18},()=>"<span>VOF · VIEW ONLY</span>").join("");
 
-function setupReader(){
-  const frame = document.getElementById("bookFrame");
-  const loading = document.getElementById("readerLoading");
-  frame.src = `https://docs.google.com/document/d/${DOC_ID}/preview`;
-  frame.addEventListener("load", () => loading.classList.add("hidden"));
-  setTimeout(() => loading.classList.add("hidden"), 4000);
-}
+document.addEventListener("contextmenu",e=>{if(e.target.closest(".frame"))e.preventDefault()});
+document.addEventListener("copy",e=>{if(e.target.closest(".frame")){e.preventDefault();}});
+document.addEventListener("dragstart",e=>{if(e.target.closest(".frame"))e.preventDefault()});
+window.addEventListener("beforeprint",e=>e.preventDefault());
 
-function setupWatermark(){
-  const wm = document.getElementById("watermark");
-  const label = "VOF · view only";
-  wm.innerHTML = Array.from({ length: 24 }).map(() => `<span>${label}</span>`).join("");
-}
+const modal=document.getElementById("supportModal");
+const support=document.getElementById("supportBtn");
+const close=document.getElementById("closeModal");
+support.addEventListener("click",()=>{modal.classList.remove("hidden");close.focus()});
+close.addEventListener("click",()=>{modal.classList.add("hidden");support.focus()});
+modal.addEventListener("click",e=>{if(e.target===modal){modal.classList.add("hidden");support.focus()}});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!modal.classList.contains("hidden")){modal.classList.add("hidden");support.focus()}});
 
-function flashDenied(){
-  const d = document.getElementById("denied");
-  d.classList.add("show");
-  setTimeout(() => d.classList.remove("show"), 550);
-}
-
-function setupProtection(){
-  const warning = document.getElementById("devtoolsWarning");
-  const readerFrame = document.getElementById("readerFrame");
-  const bookFrame = document.getElementById("bookFrame");
-
-  ["contextmenu","dragstart","selectstart"].forEach(evt => {
-    document.addEventListener(evt, e => e.preventDefault());
-  });
-  ["copy","cut","paste"].forEach(evt => {
-    document.addEventListener(evt, e => { e.preventDefault(); flashDenied(); });
-  });
-
-  document.addEventListener("keydown", e => {
-    const key = e.key.toLowerCase();
-    if ((e.ctrlKey || e.metaKey) && ["c","v","s","p","u","x","a"].includes(key)) {
-      e.preventDefault(); flashDenied();
-    }
-    if (e.key === "PrintScreen") { flashDenied(); readerFrame.classList.add("blurred"); setTimeout(() => readerFrame.classList.remove("blurred"), 900); }
-    const devShortcut = e.key === "F12" ||
-      ((e.ctrlKey || e.metaKey) && e.shiftKey && ["i","j","c","k"].includes(key)) ||
-      ((e.ctrlKey || e.metaKey) && key === "u");
-    if (devShortcut) { e.preventDefault(); warning.classList.remove("hidden"); }
-  });
-
-  // The reader frame is a cross-origin Google Docs preview: once it holds
-  // keyboard focus, keys pressed inside it never reach this page's listeners
-  // above (browsers wall off cross-origin frames from the parent on purpose).
-  // Bouncing focus back to the page the instant the frame is entered means
-  // Ctrl+C/V/A etc. get evaluated by the listeners above instead of by the
-  // frame. It's a best-effort trick, not a guarantee — it can be a beat slow
-  // on some browsers/mobile, and it doesn't touch anything Google's own
-  // viewer decides to allow (see the note below the reader).
-  window.addEventListener("blur", () => {
-    readerFrame.classList.add("blurred");
-    if (document.activeElement === bookFrame) {
-      setTimeout(() => { window.focus(); document.body.focus(); }, 0);
-    }
-  });
-
-  const sizeThreshold = 160;
-  let devtoolsOpen = false;
-  function checkDevtools(){
-    const bySize = (window.outerWidth - window.innerWidth > sizeThreshold) ||
-                   (window.outerHeight - window.innerHeight > sizeThreshold);
-    const start = performance.now();
-    // eslint-disable-next-line no-debugger
-    debugger;
-    const byTiming = (performance.now() - start) > 100;
-    devtoolsOpen = bySize || byTiming;
-    warning.classList.toggle("hidden", !devtoolsOpen);
-    readerFrame.classList.toggle("blurred", devtoolsOpen);
-  }
-  setInterval(checkDevtools, 800);
-
-  window.addEventListener("focus", () => { if (!devtoolsOpen) readerFrame.classList.remove("blurred"); });
-  document.addEventListener("visibilitychange", () => {
-    if (document.hidden) readerFrame.classList.add("blurred");
-    else if (!devtoolsOpen) readerFrame.classList.remove("blurred");
-  });
-  window.addEventListener("beforeprint", flashDenied);
-}
-
-function setupSupportModal(){
-  const openBtn = document.getElementById("supportTab");
-  const modal = document.getElementById("supportModal");
-  const closeBtn = document.getElementById("supportClose");
-  const copyBtn = document.getElementById("copyMsgBtn");
-  const msg = document.getElementById("msgText");
-
-  openBtn.addEventListener("click", () => modal.classList.remove("hidden"));
-  closeBtn.addEventListener("click", () => modal.classList.add("hidden"));
-  modal.addEventListener("click", e => { if (e.target === modal) modal.classList.add("hidden"); });
-
-  copyBtn.addEventListener("click", async () => {
-    try {
-      await navigator.clipboard.writeText(msg.textContent.trim());
-      copyBtn.textContent = "Copied ✓";
-      copyBtn.classList.add("copied");
-      setTimeout(() => { copyBtn.textContent = "Copy message"; copyBtn.classList.remove("copied"); }, 1500);
-    } catch (err) { console.error("Copy failed:", err); }
-  });
-}
+document.getElementById("copyBtn").addEventListener("click",async()=>{try{await navigator.clipboard.writeText(document.getElementById("msg").textContent.trim());document.getElementById("copyBtn").textContent="Copied ✓";setTimeout(()=>document.getElementById("copyBtn").textContent="Copy message",1500)}catch{}});
 </script>
 </body>
 </html>
