@@ -1,1060 +1,438 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Reading Room · Voice of the Forgotten</title>
-    <meta name="description" content="An online reading room for Voice of the Forgotten (VOF) by Light." />
-    <link rel="icon" href="favicon.ico" type="image/x-icon" />
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Voice of the Forgotten — Field Copy</title>
+<meta name="robots" content="noindex, nofollow" />
+<link rel="icon" href="favicon.ico" type="image/x-icon" />
+<link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,600;1,500;1,600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bone:#ECE4D3; --bone-2:#E1D6BC; --ink:#221E19; --ink-soft:#5C5342;
+  --oxblood:#7A2323; --olive:#4B5340; --line:#C9BBA0; --redact:#1B1712;
+  --serif-display:'Spectral',Georgia,serif; --serif-body:'Source Serif 4',Georgia,serif;
+  --mono:'Courier Prime',ui-monospace,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bone:#1C1812; --bone-2:#241F17; --ink:#ECE4D3; --ink-soft:#B9AD93;
+    --oxblood:#C25A5A; --olive:#8B9977; --line:#453C2C; --redact:#000;
+  }
+}
+:root[data-theme="dark"]{
+  --bone:#1C1812; --bone-2:#241F17; --ink:#ECE4D3; --ink-soft:#B9AD93;
+  --oxblood:#C25A5A; --olive:#8B9977; --line:#453C2C; --redact:#000;
+}
+@media (prefers-reduced-motion: reduce){ *{ animation-duration:.001ms !important; transition-duration:.001ms !important; } }
+*{ box-sizing:border-box; }
+html,body{ margin:0; padding:0; }
+body{
+  background:var(--bone); color:var(--ink); font-family:var(--serif-body);
+  line-height:1.6; min-height:100vh; -webkit-font-smoothing:antialiased;
+}
+html,body{ -webkit-user-select:none; -moz-user-select:none; user-select:none; -webkit-touch-callout:none; }
+img,svg{ -webkit-user-drag:none; pointer-events:none; }
+button,a,input,textarea,.modal{ pointer-events:auto; }
+@media print{
+  body *{ display:none !important; }
+  body::after{ content:"This copy can't be printed. Read it at the link instead."; display:block !important; padding:4em; font-family:sans-serif; }
+}
 
-    <!-- Zoomment verification meta tag -->
-    <meta name="zoomment" content="6a72258e44ee0b484aa2e2c3" />
+/* ---------- layout shell ---------- */
+.wrap{ max-width:760px; margin:0 auto; padding:0 20px; }
 
-    <!-- Security: prevent indexing, discourage bots -->
-    <meta name="robots" content="noindex, nofollow" />
+/* ---------- header: case-file strip ---------- */
+.file-strip{
+  border-bottom:1px solid var(--line); padding:40px 0 22px;
+}
+.file-strip .row{ display:flex; align-items:flex-start; gap:18px; }
+.stamp{
+  flex:0 0 auto; width:64px; height:64px; border-radius:50%;
+  border:2px solid var(--oxblood); color:var(--oxblood);
+  display:flex; align-items:center; justify-content:center; text-align:center;
+  font-family:var(--mono); font-size:10px; font-weight:700; letter-spacing:.03em;
+  transform:rotate(-8deg); line-height:1.15; opacity:.85;
+}
+.file-meta{ flex:1; min-width:0; }
+.file-meta .no{ font-family:var(--mono); font-size:12px; color:var(--ink-soft); margin:0 0 6px; }
+.file-meta h1{
+  font-family:var(--serif-display); font-style:italic; font-weight:600;
+  font-size:clamp(26px,5vw,38px); margin:0; color:var(--ink);
+}
+.file-meta p{ margin:6px 0 0; color:var(--ink-soft); font-size:15px; }
 
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+/* ---------- reader ---------- */
+.reader-wrap{ padding:36px 0 8px; perspective:1400px; }
+.reader-note{
+  font-family:var(--mono); font-size:11px; color:var(--oxblood);
+  letter-spacing:.04em; margin:0 0 12px;
+}
+.dossier{
+  position:relative; border:1px solid var(--line); background:var(--bone-2);
+  border-radius:2px; padding:14px 14px 18px;
+  box-shadow:0 30px 50px -30px rgba(0,0,0,.4), 0 2px 0 var(--line);
+  transform-style:preserve-3d;
+  transform-origin:top center;
+  animation:folderOpen .85s cubic-bezier(.2,.8,.2,1) both;
+  transition:box-shadow .25s ease;
+  will-change:transform;
+}
+@keyframes folderOpen{
+  from{ opacity:0; transform:rotateX(-72deg) translateY(10px) translateZ(-30px); }
+  to{ opacity:1; transform:rotateX(0deg) translateY(0) translateZ(0); }
+}
+.reader-frame{ transform-style:preserve-3d; }
+.dossier::before{
+  content:""; position:absolute; top:-1px; left:26px; width:120px; height:14px;
+  background:var(--bone-2); border:1px solid var(--line); border-bottom:none;
+  border-radius:3px 3px 0 0;
+}
+.reader-frame{
+  position:relative; width:100%; aspect-ratio:8.5/11; overflow:hidden;
+  border:1px solid var(--line); background:var(--bone);
+  transition:filter .18s ease;
+}
+.reader-frame.blurred{ filter:blur(16px) brightness(.85); }
+.reader-frame iframe{ width:100%; height:100%; border:0; display:block; background:var(--bone); }
+.reader-loading{
+  position:absolute; inset:0; display:flex; flex-direction:column; align-items:center;
+  justify-content:center; gap:10px; background:var(--bone); color:var(--ink-soft);
+  font-family:var(--mono); font-size:12px; z-index:3; transition:opacity .3s ease;
+}
+.reader-loading.hidden{ opacity:0; pointer-events:none; }
+.spinner{ width:22px; height:22px; border-radius:50%; border:2px solid var(--line); border-top-color:var(--oxblood); animation:spin .9s linear infinite; }
+@keyframes spin{ to{ transform:rotate(360deg); } }
+.watermark{
+  position:absolute; inset:0; z-index:2; pointer-events:none; display:flex; flex-wrap:wrap;
+  align-content:space-between; opacity:.09; transform:rotate(-20deg) scale(1.25);
+  font-family:var(--mono); font-size:11px; color:var(--ink);
+}
+.watermark span{ width:33%; padding:9px; white-space:nowrap; }
+.denied{
+  position:absolute; inset:0; z-index:5; display:flex; align-items:center; justify-content:center;
+  font-family:var(--serif-display); font-style:italic; font-weight:600; font-size:26px;
+  color:var(--oxblood); background:rgba(27,23,18,0); opacity:0; pointer-events:none;
+  border:3px solid var(--oxblood); transform:rotate(-6deg) scale(1.1);
+  transition:opacity .15s ease;
+}
+.denied.show{ opacity:.92; background:rgba(236,228,211,.55); }
+.reader-hint{ margin:14px 2px 0; font-size:13px; color:var(--ink-soft); }
 
-    <style>
-        /* =========================================================
-           READING ROOM — a late-night library, not a template.
-           Palette: ink navy + warm amber lamplight + slate chrome
-           ========================================================= */
+.devtools-warning{
+  position:fixed; inset:0; z-index:999; background:rgba(20,17,13,.94);
+  display:flex; align-items:center; justify-content:center; text-align:center; padding:20px;
+  color:var(--bone); font-family:var(--serif-display); font-size:20px; font-style:italic;
+}
+.devtools-warning .small{ font-family:var(--serif-body); font-style:normal; font-size:13px; color:var(--bone-2); margin-top:8px; }
+.hidden{ display:none !important; }
 
-        :root {
-            --ink: #10121a;
-            --ink-2: #171a24;
-            --surface: #1c1f2c;
-            --surface-2: #232739;
-            --line: #2b2f40;
-            --paper: #ece6d6;
-            --paper-dim: #b9b2a0;
-            --amber: #e8a33d;
-            --amber-dim: #a9772f;
-            --slate: #7d8ca0;
-            --danger: #d9705f;
-            --serif: 'Fraunces', Georgia, serif;
-            --sans: 'Inter', system-ui, -apple-system, sans-serif;
-            --mono: 'JetBrains Mono', ui-monospace, monospace;
-            --radius: 14px;
-            --shadow-lamp: 0 0 120px 40px rgba(232, 163, 61, 0.09);
-        }
+/* ---------- dispatch actions ---------- */
+.dispatch-band{ padding:38px 0 6px; display:flex; gap:14px; flex-wrap:wrap; perspective:900px; }
+.tab-btn{
+  flex:1; min-width:220px; display:flex; align-items:center; gap:12px;
+  background:var(--bone-2); border:1px solid var(--line); border-radius:2px;
+  padding:16px 18px; text-decoration:none; color:var(--ink); cursor:pointer;
+  font-family:var(--serif-body); font-size:14px;
+  transform-style:preserve-3d;
+  box-shadow:0 1px 0 var(--line), 0 10px 18px -14px rgba(0,0,0,.3);
+  transition:border-color .18s ease, transform .18s cubic-bezier(.2,.8,.2,1), box-shadow .18s ease;
+}
+.tab-btn:hover{
+  border-color:var(--oxblood);
+  transform:translateY(-4px) translateZ(10px) rotateX(3deg);
+  box-shadow:0 1px 0 var(--line), 0 20px 26px -16px rgba(0,0,0,.4);
+}
+.tab-btn:active{
+  transform:translateY(1px) translateZ(0) scale(.98);
+  box-shadow:0 1px 0 var(--line), 0 4px 8px -6px rgba(0,0,0,.35);
+}
+.tab-btn .mark{
+  flex:0 0 auto; width:30px; height:30px; border-radius:50%; border:1.5px solid var(--oxblood);
+  display:flex; align-items:center; justify-content:center; color:var(--oxblood); font-size:14px;
+}
+.tab-btn .label b{ display:block; font-family:var(--mono); font-size:10px; letter-spacing:.05em; color:var(--ink-soft); margin-bottom:3px; font-weight:400; }
+.tab-btn .label span{ font-style:italic; font-size:15px; }
 
-        @media (prefers-reduced-motion: reduce) {
-            * {
-                animation-duration: 0.001ms !important;
-                animation-iteration-count: 1 !important;
-                transition-duration: 0.001ms !important;
-            }
-        }
+/* ---------- hire card ---------- */
+.hire-wrap{ padding:34px 0 4px; perspective:1000px; }
+.hire-card{
+  position:relative; border:1px dashed var(--line); background:var(--bone-2);
+  border-radius:2px; padding:22px 24px; transform-style:preserve-3d;
+  transform:rotate(-1.2deg); box-shadow:0 16px 30px -22px rgba(0,0,0,.35);
+  transition:transform .3s cubic-bezier(.2,.8,.2,1), box-shadow .3s ease;
+}
+.hire-card:hover{
+  transform:rotate(0deg) translateZ(14px);
+  box-shadow:0 26px 44px -24px rgba(0,0,0,.42);
+}
+.hire-card .pin{
+  position:absolute; top:-9px; left:22px; width:16px; height:16px; border-radius:50%;
+  background:var(--oxblood); box-shadow:0 3px 5px rgba(0,0,0,.35);
+}
+.hire-card h4{
+  font-family:var(--serif-display); font-style:italic; font-weight:600;
+  font-size:18px; margin:0 0 8px; color:var(--ink);
+}
+.hire-card p{ margin:0 0 14px; font-size:14px; color:var(--ink-soft); max-width:52ch; }
+.hire-card .price{ color:var(--oxblood); font-weight:600; font-style:normal; }
+.hire-btn{
+  display:inline-flex; align-items:center; gap:8px; background:var(--oxblood); color:var(--bone);
+  border:none; text-decoration:none; font-family:var(--serif-body); font-size:13.5px;
+  padding:10px 18px; border-radius:2px; transition:transform .15s ease, box-shadow .15s ease;
+}
+.hire-btn:hover{ transform:translateY(-2px) translateZ(6px); box-shadow:0 10px 18px -10px rgba(0,0,0,.4); }
 
-        * {
-            box-sizing: border-box;
-        }
-        html,
-        body {
-            margin: 0;
-            padding: 0;
-        }
+/* ---------- footer ---------- */
+.foot{ border-top:1px solid var(--line); margin-top:46px; padding:26px 0 44px; }
+.foot p{ margin:0 0 8px; font-size:12.5px; color:var(--ink-soft); line-height:1.7; }
+.foot a{ color:var(--oxblood); text-decoration:none; border-bottom:1px dotted var(--oxblood); }
+.foot a:hover{ color:var(--ink); border-bottom-color:var(--ink); }
 
-        body {
-            background: radial-gradient(circle at 50% -10%, #1a1d2a 0%, var(--ink) 55%);
-            color: var(--paper);
-            font-family: var(--sans);
-            line-height: 1.5;
-            -webkit-font-smoothing: antialiased;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-
-        /* ============ COPY / SELECT / DRAG LOCKDOWN ============ */
-        html, body {
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-            -webkit-touch-callout: none; /* iOS long-press menu */
-        }
-        img, svg, .watermark {
-            -webkit-user-drag: none;
-            user-drag: none;
-            pointer-events: none;
-        }
-        /* Let real UI controls still work — re-enable pointer events + selection on interactive bits */
-        button, a, input, textarea, .modal, .comments-section, #zoomment,
-        .footer-link, .modal-close, .copy-btn {
-            pointer-events: auto;
-        }
-        input, textarea {
-            -webkit-user-select: text;
-            user-select: text;
-        }
-        /* Hide content entirely when the page is sent to a printer / print-to-PDF */
-        @media print {
-            body * { display: none !important; }
-            body::after {
-                content: "Printing is disabled for this content.";
-                display: block !important;
-                padding: 4em;
-                font-family: sans-serif;
-                font-size: 1.2em;
-            }
-        }
-        /* Blur the reader when the tab/window loses focus — reduces casual screen-recording/screenshot capture */
-        .reader-frame.blurred {
-            filter: blur(22px) brightness(0.4);
-            transition: filter 0.15s ease;
-        }
-
-        .grain {
-            position: fixed;
-            inset: 0;
-            pointer-events: none;
-            z-index: 1;
-            opacity: 0.05;
-            mix-blend-mode: overlay;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' result='noise'/%3E%3CfeDisplacementMap in='SourceGraphic' in2='noise' scale='90' xChannelSelector='R' yChannelSelector='G'/%3E%3C/filter%3E%3C/svg%3E");
-        }
-
-        /* ============ HEADER ============ */
-        .site-header {
-            position: relative;
-            z-index: 2;
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-            flex-wrap: wrap;
-            gap: 16px;
-            padding: 48px 6vw 28px;
-            border-bottom: 1px solid var(--line);
-        }
-
-        .eyebrow {
-            display: block;
-            font-family: var(--mono);
-            font-size: 11px;
-            letter-spacing: 0.18em;
-            text-transform: uppercase;
-            color: var(--amber);
-            margin-bottom: 10px;
-        }
-
-        .brand h1 {
-            font-family: var(--serif);
-            font-weight: 600;
-            font-style: italic;
-            font-size: clamp(28px, 4.5vw, 46px);
-            margin: 0;
-            color: var(--paper);
-        }
-
-        .brand p {
-            margin: 6px 0 0;
-            color: var(--paper-dim);
-            font-size: 15px;
-        }
-
-        /* ============ READER ============ */
-        .reader-shell {
-            position: relative;
-            z-index: 2;
-            padding: 56px 6vw 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .lamp-glow {
-            position: absolute;
-            top: -60px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 70vw;
-            height: 280px;
-            background: radial-gradient(ellipse at center, rgba(232, 163, 61, .13), transparent 70%);
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        .reader-frame {
-            position: relative;
-            width: min(900px, 100%);
-            aspect-ratio: 8.5 / 11;
-            background: var(--surface);
-            border: 1px solid var(--line);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow-lamp), 0 30px 60px -20px rgba(0, 0, 0, .6);
-            overflow: hidden;
-            animation: pageRise .7s cubic-bezier(.2, .8, .2, 1);
-        }
-        @keyframes pageRise {
-            from {
-                opacity: 0;
-                transform: translateY(18px) scale(.985);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-        }
-
-        .reader-frame iframe {
-            width: 100%;
-            height: 100%;
-            border: 0;
-            display: block;
-            background: var(--paper);
-        }
-
-        .reader-loading {
-            position: absolute;
-            inset: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 14px;
-            color: var(--paper-dim);
-            font-family: var(--mono);
-            font-size: 13px;
-            background: var(--surface);
-            z-index: 3;
-            transition: opacity .35s ease;
-        }
-        .reader-loading.hidden {
-            opacity: 0;
-            pointer-events: none;
-        }
-        .spinner {
-            width: 26px;
-            height: 26px;
-            border-radius: 50%;
-            border: 2px solid var(--line);
-            border-top-color: var(--amber);
-            animation: spin 0.9s linear infinite;
-        }
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        .protect-shield {
-            position: absolute;
-            inset: 0;
-            z-index: 2;
-            background: transparent;
-            pointer-events: none;
-            transition: background .2s ease;
-        }
-
-        .popout-mask {
-            position: absolute;
-            top: 0;
-            right: 0;
-            z-index: 4;
-            width: 58px;
-            height: 58px;
-            background: var(--surface);
-            border-bottom-left-radius: 10px;
-        }
-
-        .watermark {
-            position: absolute;
-            inset: 0;
-            z-index: 2;
-            pointer-events: none;
-            display: flex;
-            flex-wrap: wrap;
-            align-content: space-between;
-            opacity: 0.10;
-            transform: rotate(-22deg) scale(1.3);
-            color: #000;
-            font-family: var(--mono);
-            font-size: 12px;
-            letter-spacing: .05em;
-            user-select: none;
-        }
-        .watermark span {
-            width: 33%;
-            padding: 10px;
-            white-space: nowrap;
-        }
-
-        .reader-hint {
-            margin-top: 16px;
-            font-size: 13px;
-            color: var(--paper-dim);
-            text-align: center;
-            max-width: 520px;
-        }
-
-        .devtools-warning {
-            position: fixed;
-            inset: 0;
-            z-index: 999;
-            background: rgba(10, 11, 16, .96);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            color: var(--paper);
-            font-family: var(--serif);
-            font-size: 22px;
-        }
-        .devtools-warning .small {
-            font-family: var(--sans);
-            font-size: 14px;
-            color: var(--paper-dim);
-            margin-top: 8px;
-        }
-        .hidden {
-            display: none !important;
-        }
-
-        /* ============ DONATE BAND ============ */
-        .donate-band {
-            position: relative;
-            z-index: 2;
-            margin: 64px 6vw 0;
-            padding: 34px clamp(20px, 4vw, 44px);
-            background: linear-gradient(135deg, var(--surface), var(--surface-2));
-            border: 1px solid var(--line);
-            border-radius: var(--radius);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 24px;
-            flex-wrap: wrap;
-        }
-        .donate-copy h2 {
-            font-family: var(--serif);
-            font-style: italic;
-            font-weight: 600;
-            margin: 0 0 6px;
-            font-size: 22px;
-        }
-        .donate-copy p {
-            margin: 0;
-            color: var(--paper-dim);
-            font-size: 14px;
-            max-width: 46ch;
-        }
-
-        .donate-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 9px;
-            background: var(--amber);
-            color: #201202;
-            border: none;
-            font-family: var(--sans);
-            font-weight: 600;
-            font-size: 14px;
-            padding: 13px 22px;
-            border-radius: 999px;
-            cursor: pointer;
-            text-decoration: none;
-            white-space: nowrap;
-            transition: transform .15s ease, box-shadow .2s ease;
-        }
-        .donate-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 24px -10px rgba(232, 163, 61, .55);
-        }
-        .donate-btn.full-width {
-            width: 100%;
-            justify-content: center;
-            margin-top: 14px;
-        }
-
-        /* ============ COMMENTS ============ */
-        .comments-section {
-            position: relative;
-            z-index: 2;
-            padding: 64px 6vw 40px;
-            max-width: 900px;
-            margin: 0 auto;
-        }
-        .comments-section h2 {
-            font-family: var(--serif);
-            font-style: italic;
-            font-weight: 600;
-            font-size: 26px;
-            margin: 0 0 6px;
-        }
-        .comments-sub {
-            color: var(--paper-dim);
-            font-size: 14px;
-            margin: 0 0 26px;
-        }
-
-        /* ============ FOOTER ============ */
-        .site-footer {
-            position: relative;
-            z-index: 2;
-            padding: 40px 6vw 50px;
-            color: var(--paper-dim);
-            font-size: 13px;
-            border-top: 1px solid var(--line);
-            margin-top: 20px;
-        }
-
-        .footer-inner {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 48px;
-            max-width: 1200px;
-            margin: 0 auto;
-            justify-content: space-between;
-        }
-
-        .footer-legal {
-            flex: 2;
-            min-width: 280px;
-        }
-        .footer-legal p {
-            margin: 0 0 10px;
-            line-height: 1.6;
-        }
-        .footer-legal strong {
-            color: var(--paper);
-        }
-
-        .footer-link {
-            color: var(--amber);
-            text-decoration: none;
-            border-bottom: 1px dotted var(--amber-dim);
-            cursor: pointer;
-        }
-        .footer-link:hover {
-            color: var(--paper);
-            border-bottom-color: var(--paper);
-        }
-
-        .footer-heart {
-            margin-top: 12px;
-            color: var(--paper-dim);
-        }
-
-        .footer-join {
-            flex: 1;
-            min-width: 240px;
-            background: var(--surface);
-            padding: 20px 24px;
-            border-radius: var(--radius);
-            border: 1px solid var(--line);
-        }
-        .footer-join h3 {
-            font-family: var(--serif);
-            font-style: italic;
-            font-weight: 600;
-            font-size: 20px;
-            margin: 0 0 10px;
-            color: var(--paper);
-        }
-        .footer-join p {
-            margin: 0 0 12px;
-            font-size: 13px;
-            line-height: 1.6;
-        }
-        .footer-join-tagline {
-            margin-top: 12px;
-            font-style: italic;
-            color: var(--paper-dim);
-        }
-
-        .footer-join-btn {
-            display: inline-block;
-            background: var(--amber);
-            color: #201202;
-            font-weight: 600;
-            font-size: 14px;
-            padding: 10px 22px;
-            border-radius: 999px;
-            text-decoration: none;
-            transition: transform .15s ease, box-shadow .2s ease;
-            margin-top: 4px;
-        }
-        .footer-join-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px -8px rgba(232, 163, 61, .5);
-        }
-
-        /* ============ MODALS ============ */
-        .modal-backdrop {
-            position: fixed;
-            inset: 0;
-            z-index: 1000;
-            background: rgba(8, 9, 13, .72);
-            backdrop-filter: blur(4px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-        .modal {
-            position: relative;
-            width: min(600px, 100%);
-            max-height: 90vh;
-            overflow-y: auto;
-            background: var(--surface);
-            border: 1px solid var(--line);
-            border-radius: var(--radius);
-            padding: 28px;
-            animation: modalIn .25s ease;
-        }
-        .modal-legal {
-            width: min(700px, 100%);
-        }
-        @keyframes modalIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        .modal h3 {
-            font-family: var(--serif);
-            font-style: italic;
-            margin: 0 0 10px;
-            font-size: 20px;
-            color: var(--paper);
-        }
-        .modal h4 {
-            font-family: var(--serif);
-            font-style: italic;
-            font-size: 18px;
-            margin: 20px 0 8px;
-            color: var(--paper);
-        }
-        .modal p {
-            color: var(--paper-dim);
-            font-size: 14px;
-            line-height: 1.7;
-            margin: 0 0 12px;
-        }
-        .modal ul,
-        .modal ol {
-            color: var(--paper-dim);
-            font-size: 14px;
-            line-height: 1.7;
-            padding-left: 24px;
-        }
-        .modal li {
-            margin-bottom: 6px;
-        }
-        .modal-close {
-            position: absolute;
-            top: 14px;
-            right: 16px;
-            background: none;
-            border: none;
-            color: var(--paper-dim);
-            font-size: 22px;
-            cursor: pointer;
-            line-height: 1;
-        }
-        .modal-close:hover {
-            color: var(--paper);
-        }
-
-        .donate-message-box {
-            background: var(--ink-2);
-            border: 1px solid var(--line);
-            border-radius: 10px;
-            padding: 14px;
-            margin: 14px 0;
-        }
-        .donate-message-box p {
-            color: var(--paper);
-            font-size: 14px;
-            margin: 0 0 10px;
-        }
-        .copy-btn {
-            background: var(--surface-2);
-            color: var(--paper);
-            border: 1px solid var(--line);
-            font-size: 13px;
-            padding: 8px 14px;
-            border-radius: 999px;
-            cursor: pointer;
-        }
-        .copy-btn.copied {
-            border-color: var(--amber);
-            color: var(--amber);
-        }
-        .modal-note {
-            font-size: 12px;
-            text-align: center;
-            margin-top: 10px;
-        }
-
-        .legal-btn {
-            display: inline-block;
-            background: var(--amber);
-            color: #201202;
-            font-weight: 600;
-            font-size: 14px;
-            padding: 10px 24px;
-            border-radius: 999px;
-            text-decoration: none;
-            transition: transform .15s ease, box-shadow .2s ease;
-            margin: 6px 0 12px;
-            border: none;
-            cursor: pointer;
-        }
-        .legal-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px -8px rgba(232, 163, 61, .5);
-        }
-
-        .modal hr {
-            border: none;
-            border-top: 1px solid var(--line);
-            margin: 18px 0;
-        }
-
-        /* Anti-bot / security banner */
-        .security-banner {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 9999;
-            background: var(--surface);
-            border: 1px solid var(--danger);
-            color: var(--danger);
-            padding: 10px 20px;
-            border-radius: 8px;
-            font-size: 13px;
-            font-family: var(--sans);
-            display: none;
-            text-align: center;
-            max-width: 90%;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-        }
-        .security-banner.visible {
-            display: block;
-        }
-
-        @media (max-width: 640px) {
-            .site-header {
-                padding: 34px 5vw 22px;
-            }
-            .reader-frame {
-                aspect-ratio: 3/4;
-            }
-            .footer-inner {
-                flex-direction: column;
-                gap: 28px;
-            }
-            .footer-join {
-                padding: 16px 18px;
-            }
-            .modal {
-                padding: 20px;
-                width: 100%;
-            }
-        }
-    </style>
+/* ---------- modal ---------- */
+.modal-backdrop{
+  position:fixed; inset:0; z-index:1000; background:rgba(20,17,13,.65);
+  display:flex; align-items:center; justify-content:center; padding:20px;
+  perspective:1200px;
+}
+.modal{
+  width:min(480px,100%); background:var(--bone); border:1px solid var(--line);
+  border-radius:2px; padding:26px; position:relative;
+  animation:cardFlip .35s cubic-bezier(.2,.8,.2,1) both;
+  box-shadow:0 30px 60px -30px rgba(0,0,0,.5);
+}
+@keyframes cardFlip{
+  from{ opacity:0; transform:rotateX(-18deg) translateY(14px) scale(.94); }
+  to{ opacity:1; transform:rotateX(0) translateY(0) scale(1); }
+}
+.modal h3{ font-family:var(--serif-display); font-style:italic; font-weight:600; margin:0 0 10px; font-size:20px; }
+.modal p{ font-size:14px; color:var(--ink-soft); margin:0 0 14px; }
+.msg-box{ background:var(--bone-2); border:1px solid var(--line); border-radius:2px; padding:12px; margin-bottom:14px; }
+.msg-box p{ color:var(--ink); margin:0 0 10px; font-size:13.5px; }
+.copy-btn,.send-btn{
+  font-family:var(--mono); font-size:12px; border-radius:2px; cursor:pointer; padding:9px 14px;
+}
+.copy-btn{ background:var(--bone); border:1px solid var(--line); color:var(--ink); }
+.copy-btn.copied{ border-color:var(--oxblood); color:var(--oxblood); }
+.send-btn{
+  display:block; width:100%; text-align:center; background:var(--oxblood); color:var(--bone);
+  border:none; text-decoration:none; padding:12px; margin-top:4px;
+}
+.modal-close{ position:absolute; top:12px; right:14px; background:none; border:none; font-size:20px; color:var(--ink-soft); cursor:pointer; }
+</style>
 </head>
 <body>
 
-    <div class="grain" aria-hidden="true"></div>
+<div class="wrap">
 
-    <!-- Security banner for bot detection -->
-    <div class="security-banner" id="securityBanner">⚠️ Suspicious activity detected — please disable automation tools.</div>
-
-    <!-- ============ HEADER ============ -->
-    <header class="site-header">
-        <div class="brand">
-            <span class="eyebrow">Now Reading</span>
-            <h1 id="bookTitle">Voice of the Forgotten (VOF)</h1>
-            <p id="bookAuthor">by Light Shadow Knight</p>
-        </div>
-    </header>
-
-    <!-- ============ READER ============ -->
-    <main class="reader-shell">
-        <div class="lamp-glow" aria-hidden="true"></div>
-
-        <div class="reader-frame" id="readerFrame">
-            <div class="reader-loading" id="readerLoading">
-                <div class="spinner"></div>
-                <p>Opening the book…</p>
-            </div>
-            <iframe id="bookFrame" title="Book viewer" loading="lazy" allow="fullscreen"></iframe>
-
-            <div class="protect-shield" id="protectShield"></div>
-            <div class="popout-mask" aria-hidden="true"></div>
-            <div class="watermark" id="watermark" aria-hidden="true"></div>
-        </div>
-
-        <p class="reader-hint">This copy is watermarked and set to view-only. Please don't redistribute it — thank you for respecting that.</p>
-    </main>
-
-    <!-- ============ DEVTOOLS WARNING ============ -->
-    <div class="devtools-warning hidden" id="devtoolsWarning">
-        <div class="devtools-warning-inner">
-            <p>Reader tools are paused while developer tools are open.</p>
-            <p class="small">Close them to keep reading.</p>
-        </div>
+  <header class="file-strip">
+    <div class="row">
+      <div class="stamp">V.O.F.<br>FILE</div>
+      <div class="file-meta">
+        <p class="no">CASE FILE №1 · BEFORE WAR</p>
+        <h1>Voice of the Forgotten</h1>
+        <p>Volume I, by Light Shadow Knight</p>
+      </div>
     </div>
+  </header>
 
-    <!-- ============ DONATE BAND ============ -->
-    <section class="donate-band">
-        <div class="donate-copy">
-            <h2>Enjoying it so far?</h2>
-            <p>If this story is worth a coffee, you can support it directly — and join the donor shout-out list.</p>
+  <main class="reader-wrap">
+    <p class="reader-note">READ-ONLY COPY — NOT FOR REPRODUCTION</p>
+    <div class="dossier">
+      <div class="reader-frame" id="readerFrame">
+        <div class="reader-loading" id="readerLoading">
+          <div class="spinner"></div>
+          <p>Retrieving file…</p>
         </div>
-        <button id="donateBtn" class="donate-btn">
-            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21c-4-3-9-6.5-9-11.5A5.5 5.5 0 0 1 12 6a5.5 5.5 0 0 1 9 3.5C21 14.5 16 18 12 21z"/></svg>
-            Donate
-        </button>
-    </section>
-
-    <!-- ============ COMMENTS ============ -->
-    <section class="comments-section">
-        <h2>Notes in the margin</h2>
-        <p class="comments-sub">Leave a line, reply to someone else's, drop a GIF or a sticker — it's all fair game.</p>
-        <div id="zoomment" data-theme="light" data-language="en" data-gravatar="monsterid" data-emotions="❤️,😀,🪄,🥸,💡,🤔,💩,😢" data-visitors="true"></div>
-        <script src="https://cdn.zoomment.com/zoomment.min.js" async></script>
-    </section>
-
-    <!-- ============ FOOTER ============ -->
-    <footer class="site-footer">
-        <div class="footer-inner">
-
-            <div class="footer-legal">
-                <p><strong>© 2026 Light. All Rights Reserved.</strong></p>
-                <p><strong>Voice of the Forgotten (VOF)</strong> is an original work by <strong>Light</strong> under <strong>Light Web Official</strong>.</p>
-                <p>All story content, characters, artwork, UI, logos, and other creative assets are protected by copyright and applicable intellectual property laws. Unauthorized copying, reproduction, distribution, or modification is strictly prohibited.</p>
-                <p>
-                    By using this website, you agree to our
-                    <a href="https://sites.google.com/view/lightwebofficialstudio/terms-conditions?authuser=0" target="_blank" rel="noopener noreferrer" class="footer-link">Terms &amp; Conditions</a>,
-                    <a href="https://sites.google.com/view/lightwebofficialstudio/privacy-policy?authuser=0" target="_blank" rel="noopener noreferrer" class="footer-link">Privacy Policy</a>,
-                    <a href="https://sites.google.com/view/lightwebofficialstudio/community-guidelines?authuser=0" target="_blank" rel="noopener noreferrer" class="footer-link">Community Guidelines</a>,
-                    <a href="#" class="footer-link" data-modal="fancontent">Fan Content Policy</a>, and
-                    <a href="#" class="footer-link" data-modal="license">License</a>.
-                </p>
-                <p class="footer-heart">Made with ❤️ by <strong>Light Web Official</strong>.</p>
-            </div>
-
-            <div class="footer-join">
-                <h3>Join the VOF Realm</h3>
-                <p>Become a part of the <strong>Light Web Official</strong> community on Discord — connect with creators, readers, artists, developers, and storytellers from around the world.</p>
-                <p>Discover original projects, share your ideas, participate in discussions, and stay up to date with the latest releases from <strong>Voice of the Forgotten (VOF)</strong> and other creative works.</p>
-                <a href="https://discord.gg/hkkKYfQwVg" target="_blank" rel="noopener noreferrer" class="footer-join-btn">Join our Discord →</a>
-                <p class="footer-join-tagline">We'd love to have you with us. 💙</p>
-            </div>
-
-        </div>
-    </footer>
-
-    <!-- ============ DONATE MODAL ============ -->
-    <div class="modal-backdrop hidden" id="donateModal">
-        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="donateModalTitle">
-            <button class="modal-close" id="donateModalClose" aria-label="Close">&times;</button>
-            <h3 id="donateModalTitle">Support on Instagram</h3>
-            <p>Instagram doesn't allow websites to pre-fill a DM, so here's a message ready to paste:</p>
-            <div class="donate-message-box">
-                <p id="donateMessageText">Hey! I just read your book and I'd like to donate — count me in for the donor community, and I'd love a shout-out too 🙌</p>
-                <button id="copyMessageBtn" class="copy-btn">Copy message</button>
-            </div>
-            <a id="openInstagramBtn" href="https://ig.me/m/light_shadowknight" target="_blank" rel="noopener noreferrer" class="donate-btn full-width">
-                Open Instagram DM
-            </a>
-            <p class="modal-note">Paste the message once the chat opens — that's it.</p>
-        </div>
+        <iframe id="bookFrame" title="Book viewer" loading="lazy"></iframe>
+        <div class="watermark" id="watermark" aria-hidden="true"></div>
+        <div class="denied" id="denied">DENIED</div>
+      </div>
     </div>
+    <p class="reader-hint">Copying, pasting, printing, right-click, and dev-tools shortcuts are blocked on this page. Two honest limits worth knowing: no website can stop a screenshot or screen recording — that happens at the OS level, outside any page's control — and the real backstop against copying <em>inside</em> the embedded viewer is the "disable download, print &amp; copy for viewers" toggle on the Drive file itself, not this page's script. Treat all of this as a deterrent, not a lock.</p>
+  </main>
 
-    <!-- ============ LEGAL MODAL (dynamic) ============ -->
-    <div class="modal-backdrop hidden" id="legalModal">
-        <div class="modal modal-legal" role="dialog" aria-modal="true" aria-labelledby="legalModalTitle">
-            <button class="modal-close" id="legalModalClose" aria-label="Close">&times;</button>
-            <div id="legalModalContent">
-                <!-- dynamically populated -->
-            </div>
-        </div>
+  <div class="devtools-warning hidden" id="devtoolsWarning">
+    <div>
+      <p>Reading is paused while developer tools are open.</p>
+      <p class="small">Close them to keep going.</p>
     </div>
+  </div>
 
-    <script>
-        /* =========================================================
-           CONFIG
-           ========================================================= */
-        const CONFIG = {
-            bookTitle: "Voice of the Forgotten (VOF)",
-            bookAuthor: "Light Shadow Knight",
-            driveFileId: "1WeWpxc0WisMTzwq08YyUDczuIM_JgH-V",
-            instagramHandle: "light_shadowknight",
-        };
+  <section class="dispatch-band">
+    <a class="tab-btn" id="commentTab" href="https://www.webnovel.com/book/34523686908733405" target="_blank" rel="noopener noreferrer">
+      <span class="mark">✎</span>
+      <span class="label"><b>LEAVE WORD</b><span>Comment on Webnovel</span></span>
+    </a>
+    <button class="tab-btn" id="supportTab" type="button">
+      <span class="mark">✦</span>
+      <span class="label"><b>SEND SUPPORT</b><span>Chat / donate on Instagram</span></span>
+    </button>
+    <a class="tab-btn" id="licenseTab" href="LICENSE.md" target="_blank" rel="noopener noreferrer">
+      <span class="mark">§</span>
+      <span class="label"><b>USAGE TERMS</b><span>License</span></span>
+    </a>
+  </section>
 
-        /* =========================================================
-           ANTI-BOT / SECURITY
-           ========================================================= */
-        function detectBot() {
-            const securityBanner = document.getElementById('securityBanner');
-            let isBot = false;
+  <section class="hire-wrap">
+    <div class="hire-card">
+      <span class="pin"></span>
+      <h4>Note from the desk</h4>
+      <p>If you want a site like this for your own work — real thought put into the design and the security, not a template — I take on a limited number of builds. Starting from just <span class="price">₹20,000</span>.</p>
+      <a class="hire-btn" href="https://www.instagram.com/light_shadowknight/" target="_blank" rel="noopener noreferrer">Message me on Instagram →</a>
+    </div>
+  </section>
 
-            // 1. Check for headless browser / automation
-            if (navigator.webdriver === true) {
-                isBot = true;
-            }
+  <footer class="foot">
+    <p>© 2026 Light. Voice of the Forgotten is an original work — please don't redistribute this copy.</p>
+    <p>Comments open on <a href="https://www.webnovel.com/book/34523686908733405" target="_blank" rel="noopener noreferrer">Webnovel</a>. For anything else, reach out on <a href="https://www.instagram.com/light_shadowknight/" target="_blank" rel="noopener noreferrer">Instagram</a>.</p>
+    <p><a href="LICENSE.md" target="_blank" rel="noopener noreferrer">License</a> · <a href="Terms%20%26%20Conditions.md" target="_blank" rel="noopener noreferrer">Terms &amp; Conditions</a> · <a href="FAN_CONTENT_POLICY.md" target="_blank" rel="noopener noreferrer">Fan Content Policy</a></p>
+  </footer>
 
-            // 2. Check user agent for common bot strings
-            const ua = navigator.userAgent.toLowerCase();
-            const botPatterns = ['bot', 'crawl', 'spider', 'headless', 'phantom', 'selenium', 'puppeteer'];
-            if (botPatterns.some(pattern => ua.includes(pattern))) {
-                isBot = true;
-            }
+</div>
 
-            // 3. Check screen size: headless often has 0x0 or tiny
-            if (window.screen.width === 0 && window.screen.height === 0) {
-                isBot = true;
-            }
+<div class="modal-backdrop hidden" id="supportModal">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="supportTitle">
+    <button class="modal-close" id="supportClose" aria-label="Close">&times;</button>
+    <h3 id="supportTitle">Send support on Instagram</h3>
+    <p>Instagram won't let a website pre-fill a DM, so here's a line ready to paste once the chat opens.</p>
+    <div class="msg-box">
+      <p id="msgText">Hey — just read Voice of the Forgotten and wanted to send some support 🙌</p>
+      <button class="copy-btn" id="copyMsgBtn">Copy message</button>
+    </div>
+    <a class="send-btn" id="openIg" href="https://ig.me/m/light_shadowknight" target="_blank" rel="noopener noreferrer">Open Instagram DM</a>
+  </div>
+</div>
 
-            if (isBot) {
-                securityBanner.textContent = '⚠️ Automated access detected. Please disable bots or scripts.';
-                securityBanner.classList.add('visible');
-                // Optionally block further actions
-                document.body.style.pointerEvents = 'none';
-                document.body.style.opacity = '0.3';
-                return true;
-            }
-            return false;
-        }
+<script>
+const DOC_ID = "1ndNJ4M3zpla2uWomVLRa9b7_h_EZj1k0";
 
-        /* =========================================================
-           INIT
-           ========================================================= */
-        document.addEventListener("DOMContentLoaded", () => {
-            // 1. Anti-bot check
-            const isBot = detectBot();
-            if (isBot) {
-                // Still show some content but with restrictions
-                return;
-            }
+document.addEventListener("DOMContentLoaded", () => {
+  setupReader();
+  setupWatermark();
+  setupProtection();
+  setupSupportModal();
+  setupDossierTilt();
+});
 
-            // 2. Set title/author
-            document.getElementById("bookTitle").textContent = CONFIG.bookTitle;
-            document.getElementById("bookAuthor").textContent = "by " + CONFIG.bookAuthor;
+function setupDossierTilt(){
+  const dossier = document.querySelector(".dossier");
+  if (!dossier || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const maxTilt = 4;
+  dossier.addEventListener("mousemove", e => {
+    const r = dossier.getBoundingClientRect();
+    const px = (e.clientX - r.left) / r.width - 0.5;
+    const py = (e.clientY - r.top) / r.height - 0.5;
+    dossier.style.transform = `rotateX(${(-py * maxTilt).toFixed(2)}deg) rotateY(${(px * maxTilt).toFixed(2)}deg) translateZ(6px)`;
+  });
+  dossier.addEventListener("mouseleave", () => { dossier.style.transform = ""; });
+}
 
-            // 3. Setup reader
-            setupReader();
+function setupReader(){
+  const frame = document.getElementById("bookFrame");
+  const loading = document.getElementById("readerLoading");
+  frame.src = `https://docs.google.com/document/d/${DOC_ID}/preview`;
+  frame.addEventListener("load", () => loading.classList.add("hidden"));
+  setTimeout(() => loading.classList.add("hidden"), 4000);
+}
 
-            // 4. Watermark
-            setupWatermark();
+function setupWatermark(){
+  const wm = document.getElementById("watermark");
+  const label = "VOF · view only";
+  wm.innerHTML = Array.from({ length: 24 }).map(() => `<span>${label}</span>`).join("");
+}
 
-            // 5. Protection (right-click, keys, etc.)
-            setupProtection();
+function flashDenied(){
+  const d = document.getElementById("denied");
+  d.classList.add("show");
+  setTimeout(() => d.classList.remove("show"), 550);
+}
 
-            // 6. Donate modal
-            setupDonateModal();
+function setupProtection(){
+  const warning = document.getElementById("devtoolsWarning");
+  const readerFrame = document.getElementById("readerFrame");
+  const bookFrame = document.getElementById("bookFrame");
 
-            // 7. Legal modals
-            setupLegalModals();
-        });
+  ["contextmenu","dragstart","selectstart"].forEach(evt => {
+    document.addEventListener(evt, e => e.preventDefault());
+  });
+  ["copy","cut","paste"].forEach(evt => {
+    document.addEventListener(evt, e => { e.preventDefault(); flashDenied(); });
+  });
 
-        /* ---------- Reader ---------- */
-        function setupReader() {
-            const frame = document.getElementById("bookFrame");
-            const loading = document.getElementById("readerLoading");
-            frame.src = `https://drive.google.com/file/d/${CONFIG.driveFileId}/preview`;
-            frame.addEventListener("load", () => loading.classList.add("hidden"));
-            setTimeout(() => loading.classList.add("hidden"), 4000);
-        }
+  document.addEventListener("keydown", e => {
+    const key = e.key.toLowerCase();
+    if ((e.ctrlKey || e.metaKey) && ["c","v","s","p","u","x","a"].includes(key)) {
+      e.preventDefault(); flashDenied();
+    }
+    if (e.key === "PrintScreen") { flashDenied(); readerFrame.classList.add("blurred"); setTimeout(() => readerFrame.classList.remove("blurred"), 900); }
+    const devShortcut = e.key === "F12" ||
+      ((e.ctrlKey || e.metaKey) && e.shiftKey && ["i","j","c","k"].includes(key)) ||
+      ((e.ctrlKey || e.metaKey) && key === "u");
+    if (devShortcut) { e.preventDefault(); warning.classList.remove("hidden"); }
+  });
 
-        /* ---------- Watermark ---------- */
-        function setupWatermark() {
-            const wm = document.getElementById("watermark");
-            const label = `${CONFIG.bookTitle} · read-only copy`;
-            const tileCount = 30;
-            wm.innerHTML = Array.from({ length: tileCount })
-                .map(() => `<span>${label}</span>`)
-                .join("");
-        }
+  // The reader frame is a cross-origin Google Docs preview: once it holds
+  // keyboard focus, keys pressed inside it never reach this page's listeners
+  // above (browsers wall off cross-origin frames from the parent on purpose).
+  // Bouncing focus back to the page the instant the frame is entered means
+  // Ctrl+C/V/A etc. get evaluated by the listeners above instead of by the
+  // frame. It's a best-effort trick, not a guarantee — it can be a beat slow
+  // on some browsers/mobile, and it doesn't touch anything Google's own
+  // viewer decides to allow (see the note below the reader).
+  window.addEventListener("blur", () => {
+    readerFrame.classList.add("blurred");
+    if (document.activeElement === bookFrame) {
+      setTimeout(() => { window.focus(); document.body.focus(); }, 0);
+    }
+  });
 
-        /* ---------- Protection ---------- */
-        function setupProtection() {
-            const warning = document.getElementById("devtoolsWarning");
-            const readerFrame = document.getElementById("readerFrame");
+  const sizeThreshold = 160;
+  let devtoolsOpen = false;
+  function checkDevtools(){
+    const bySize = (window.outerWidth - window.innerWidth > sizeThreshold) ||
+                   (window.outerHeight - window.innerHeight > sizeThreshold);
+    const start = performance.now();
+    // eslint-disable-next-line no-debugger
+    debugger;
+    const byTiming = (performance.now() - start) > 100;
+    devtoolsOpen = bySize || byTiming;
+    warning.classList.toggle("hidden", !devtoolsOpen);
+    readerFrame.classList.toggle("blurred", devtoolsOpen);
+  }
+  setInterval(checkDevtools, 800);
 
-            // 1. Block right-click, drag, text selection, and copy/cut events
-            ["contextmenu", "dragstart", "selectstart"].forEach((evt) => {
-                document.addEventListener(evt, (e) => e.preventDefault());
-            });
-            ["copy", "cut"].forEach((evt) => {
-                document.addEventListener(evt, (e) => {
-                    e.preventDefault();
-                    flashProtectNotice();
-                });
-            });
+  window.addEventListener("focus", () => { if (!devtoolsOpen) readerFrame.classList.remove("blurred"); });
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) readerFrame.classList.add("blurred");
+    else if (!devtoolsOpen) readerFrame.classList.remove("blurred");
+  });
+  window.addEventListener("beforeprint", flashDenied);
+}
 
-            // 2. Block common inspect / save / print / view-source shortcuts
-            document.addEventListener("keydown", (e) => {
-                const key = e.key.toLowerCase();
-                const blockedWithCtrl = ["c", "s", "p", "u", "x", "a"];
-                if ((e.ctrlKey || e.metaKey) && blockedWithCtrl.includes(key)) {
-                    e.preventDefault();
-                    flashProtectNotice();
-                }
-                if (key === "printscreen") {
-                    flashProtectNotice();
-                    // Best-effort: blank the clipboard image if the OS already grabbed one
-                    if (navigator.clipboard && navigator.clipboard.writeText) {
-                        navigator.clipboard.writeText("").catch(() => {});
-                    }
-                }
-                const isDevtoolsShortcut =
-                    e.key === "F12" ||
-                    ((e.ctrlKey || e.metaKey) && e.shiftKey && ["i", "j", "c", "k"].includes(key)) ||
-                    ((e.ctrlKey || e.metaKey) && key === "u");
-                if (isDevtoolsShortcut) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    warning.classList.remove("hidden");
-                }
-            });
+function setupSupportModal(){
+  const openBtn = document.getElementById("supportTab");
+  const modal = document.getElementById("supportModal");
+  const closeBtn = document.getElementById("supportClose");
+  const copyBtn = document.getElementById("copyMsgBtn");
+  const msg = document.getElementById("msgText");
 
-            // 3. Devtools detection — window size heuristic (works for docked panels)
-            const sizeThreshold = 160;
-            const checkSizeGap = () => {
-                const widthGap = window.outerWidth - window.innerWidth > sizeThreshold;
-                const heightGap = window.outerHeight - window.innerHeight > sizeThreshold;
-                return widthGap || heightGap;
-            };
+  openBtn.addEventListener("click", () => modal.classList.remove("hidden"));
+  closeBtn.addEventListener("click", () => modal.classList.add("hidden"));
+  modal.addEventListener("click", e => { if (e.target === modal) modal.classList.add("hidden"); });
 
-            // 4. Devtools detection — debugger timing heuristic (catches undocked/detached panels)
-            let devtoolsOpen = false;
-            const checkTimingGap = () => {
-                const start = performance.now();
-                // eslint-disable-next-line no-debugger
-                debugger;
-                const elapsed = performance.now() - start;
-                return elapsed > 100; // paused execution means devtools is open & stepping
-            };
-
-            setInterval(() => {
-                devtoolsOpen = checkSizeGap() || checkTimingGap();
-                warning.classList.toggle("hidden", !devtoolsOpen);
-                if (devtoolsOpen) {
-                    readerFrame.classList.add("blurred");
-                } else {
-                    readerFrame.classList.remove("blurred");
-                }
-            }, 800);
-
-            // 5. Blur the reader whenever the window/tab loses focus
-            //    (reduces casual screenshotting / screen-recording of the open page)
-            window.addEventListener("blur", () => readerFrame.classList.add("blurred"));
-            window.addEventListener("focus", () => {
-                if (!devtoolsOpen) readerFrame.classList.remove("blurred");
-            });
-            document.addEventListener("visibilitychange", () => {
-                if (document.hidden) {
-                    readerFrame.classList.add("blurred");
-                } else if (!devtoolsOpen) {
-                    readerFrame.classList.remove("blurred");
-                }
-            });
-
-            // 6. Block browser print (Ctrl/Cmd+P is already caught above; this covers the Print menu item too)
-            window.addEventListener("beforeprint", () => flashProtectNotice());
-        }
-
-        function flashProtectNotice() {
-            const shield = document.getElementById("protectShield");
-            shield.style.background = "rgba(16,18,26,0.97)";
-            setTimeout(() => { shield.style.background = "transparent"; }, 600);
-        }
-
-        /* ---------- Donate modal ---------- */
-        function setupDonateModal() {
-            const openBtn = document.getElementById("donateBtn");
-            const modal = document.getElementById("donateModal");
-            const closeBtn = document.getElementById("donateModalClose");
-            const copyBtn = document.getElementById("copyMessageBtn");
-            const messageEl = document.getElementById("donateMessageText");
-            const igLink = document.getElementById("openInstagramBtn");
-
-            igLink.href = `https://ig.me/m/${CONFIG.instagramHandle}`;
-
-            openBtn.addEventListener("click", () => modal.classList.remove("hidden"));
-            closeBtn.addEventListener("click", () => modal.classList.add("hidden"));
-            modal.addEventListener("click", (e) => { if (e.target === modal) modal.classList.add("hidden"); });
-
-            copyBtn.addEventListener("click", async () => {
-                try {
-                    await navigator.clipboard.writeText(messageEl.textContent.trim());
-                    copyBtn.textContent = "Copied ✓";
-                    copyBtn.classList.add("copied");
-                    setTimeout(() => {
-                        copyBtn.textContent = "Copy message";
-                        copyBtn.classList.remove("copied");
-                    }, 1500);
-                } catch (err) {
-                    console.error("Copy failed:", err);
-                }
-            });
-        }
-
-        /* ---------- Legal modals ---------- */
-        function setupLegalModals() {
-            const legalModal = document.getElementById("legalModal");
-            const legalClose = document.getElementById("legalModalClose");
-            const legalContent = document.getElementById("legalModalContent");
-
-            legalClose.addEventListener("click", () => legalModal.classList.add("hidden"));
-            legalModal.addEventListener("click", (e) => { if (e.target === legalModal) legalModal.classList.add("hidden"); });
-
-            document.querySelectorAll(".footer-link[data-modal]").forEach((link) => {
-                link.addEventListener("click", (e) => {
-                    e.preventDefault();
-                    const modalType = link.dataset.modal;
-                    displayLegalContent(modalType, legalContent);
-                    legalModal.classList.remove("hidden");
-                });
-            });
-        }
-
-        function displayLegalContent(type, container) {
-            const content = {
-                fancontent: `
-                    <h3>Fan Content Policy</h3>
-                    <p>We love fan creations! If you create fan art, fan fiction, or other derivative works based on <strong>Voice of the Forgotten</strong>, here's what we ask:</p>
-                    <ul>
-                        <li>Give credit to <strong>Light</strong> as the original author and creator.</li>
-                        <li>Make it clear that your work is unofficial fan-made content, not endorsed by Light Web Official.</li>
-                        <li>Don't profit from or commercialize fan content without explicit permission.</li>
-                        <li>Respect the story and characters — avoid content that contradicts the spirit of VOF.</li>
-                    </ul>
-                    <p>Questions or want to collaborate? Reach out to us on <a href="https://discord.gg/hkkKYfQwVg" target="_blank" rel="noopener noreferrer" class="footer-link">Discord</a>.</p>
-                `,
-                license: `
-                    <h3>License & Attribution</h3>
-                    <p><strong>Voice of the Forgotten (VOF)</strong> is created by <strong>Light</strong> and published under <strong>Light Web Official</strong>.</p>
-                    <h4>Creative Commons Attribution (CC BY 4.0)</h4>
-                    <p>This work is licensed under the <strong>Creative Commons Attribution 4.0 International License</strong>. You are free to:</p>
-                    <ul>
-                        <li><strong>Share</strong> — copy and redistribute the material in any medium or format</li>
-                        <li><strong>Adapt</strong> — remix, transform, and build upon the material for any purpose, even commercially</li>
-                    </ul>
-                    <p><strong>Under the following terms:</strong></p>
-                    <ul>
-                        <li><strong>Attribution</strong> — you must give appropriate credit, provide a link to the license, and indicate if changes were made</li>
-                    </ul>
-                    <p>For more details, visit <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer" class="footer-link">creativecommons.org</a>.</p>
-                `
-            };
-            container.innerHTML = content[type] || "<p>Content not found.</p>";
-        }
-    </script>
+  copyBtn.addEventListener("click", async () => {
+    try {
+      await navigator.clipboard.writeText(msg.textContent.trim());
+      copyBtn.textContent = "Copied ✓";
+      copyBtn.classList.add("copied");
+      setTimeout(() => { copyBtn.textContent = "Copy message"; copyBtn.classList.remove("copied"); }, 1500);
+    } catch (err) { console.error("Copy failed:", err); }
+  });
+}
+</script>
 </body>
 </html>
