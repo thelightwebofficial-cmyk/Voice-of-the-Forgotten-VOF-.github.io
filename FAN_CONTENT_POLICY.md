@@ -1,6 +1,6 @@
-# Voice of the Forgotten (VOF) Fan Content Policy v1.0
+# Voice of the Forgotten (VOF) Fan Content Policy v1.1
 
-**Last Updated:** August 2026
+**Last Updated:** September 2026
 
 First of all, **thank you** for supporting **Voice of the Forgotten (VOF)**! ❤️
 
@@ -152,9 +152,44 @@ Please do **not**:
 
 ---
 
+# 🤖 AI & MACHINE-LEARNING POLICY
+
+## **AI training on any data of VOF is strictly prohibited.**
+
+No VOF material may be used to train, pre-train, fine-tune, benchmark, evaluate, or otherwise develop an AI or machine-learning system without **explicit written permission from Light [Shadow Knight]**.
+
+This prohibition applies to **any data of VOF**, including but not limited to:
+
+* VOF chapters and story text
+* Dialogue and scripts
+* Lore and worldbuilding
+* Character information
+* Character descriptions
+* Official artwork and graphics
+* Logos and visual assets
+* Animations and videos
+* Audio or other official media
+* Metadata derived from VOF material
+* Scraped or archived VOF content
+* Datasets containing VOF material
+* Embeddings or training resources derived from VOF material
+* Synthetic datasets substantially based on VOF material
+* Any collection of VOF material assembled for machine learning
+
+This prohibition applies whether the system is public, private, local, cloud-based, commercial, experimental, or personal.
+
+You may use AI tools to help create **otherwise permitted fan content**, but that permission does **not** grant permission to use VOF material as training data.
+
+### **AI can help create with VOF.**
+### **AI cannot train on VOF.**
+
+**AI training on any data of VOF is strictly prohibited. 🤖🚫**
+
+---
+
 # 🤖 AI-Generated Fan Content
 
-AI-generated fan creations are welcome.
+AI-generated fan creations are welcome when they otherwise comply with this policy.
 
 If your work uses AI, please clearly mention:
 
@@ -166,6 +201,8 @@ Example:
 
 > Fan art created with [AI Tool Name].
 > Based on Voice of the Forgotten by Light.
+
+This permission applies to creating an allowed fan work. It does **not** permit uploading VOF material into an AI system for training or fine-tuning.
 
 ---
 
